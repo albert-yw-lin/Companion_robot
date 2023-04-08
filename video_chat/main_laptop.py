@@ -1,7 +1,7 @@
 import cv2, socket, time
 import mediapipe as mp
 from config import *
-from utils import vedio_chat_utils
+from video_chat_utils import vedio_chat_utils
 
 #############
 ### Setup ###
@@ -12,7 +12,7 @@ mp_face = mp.solutions.face_detection
 mp_pose = mp.solutions.pose
 
 # webcam
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(CAMERA_ID)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
 
