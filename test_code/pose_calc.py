@@ -10,7 +10,7 @@ mp_pose = mp.solutions.pose
 FPS = fps.FPS((0,0,0))
 
 # For webcam input:
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 with mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as pose:

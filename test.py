@@ -2,18 +2,18 @@
 ### webcam ###
 ##############
 
-# import cv2
-# cap = cv2.VideoCapture(1)
-# while cap.isOpened():
-#     success, image = cap.read()
-#     if not success:
-#         print("Ignoring empty camera frame.")
-#         # If loading a video, use 'break' instead of 'continue'.
-#         continue
-#     cv2.imshow('video chat', image)
-#     if cv2.waitKey(5) & 0xFF == 27:
-#         break
-# cap.release()
+import cv2
+cap = cv2.VideoCapture(1)
+while cap.isOpened():
+    success, image = cap.read()
+    if not success:
+        print("Ignoring empty camera frame.")
+        # If loading a video, use 'break' instead of 'continue'.
+        continue
+    cv2.imshow('video chat', image)
+    if cv2.waitKey(5) & 0xFF == 27:
+        break
+cap.release()
 
 ##################
 ### CSI camera ###
@@ -89,13 +89,13 @@
 ##############
 ### Jetcam ###
 ##############
-import cv2
-import numpy as np
-from jetcam.jetcam.csi_camera import CSICamera
+# import cv2
+# import numpy as np
+# from jetcam.jetcam.csi_camera import CSICamera
 
-camera = CSICamera(width=224, height=224, capture_width=1080, capture_height=720, capture_fps=30)
-while True:
-    image = camera.read()
-    cv2.imshow("123", image)
-    if cv2.waitKey(5) & 0xFF == 27:
-        break
+# camera = CSICamera(width=224, height=224, capture_width=1080, capture_height=720, capture_fps=30)
+# while True:
+#     image = camera.read()
+#     cv2.imshow("123", image)
+#     if cv2.waitKey(5) & 0xFF == 27:
+#         break

@@ -78,7 +78,7 @@ class vedio_chat_utils:
         arm_angle_L = (np.arctan2(arm_L[1], arm_L[0]) - np.arctan2(forearm_L[1], forearm_L[0]))*180/np.pi
         shoulder_angle_R = (np.arctan2(shoulder_R[1], shoulder_R[0]) - np.arctan2(arm_R[1], arm_R[0]))*180/np.pi
         arm_angle_R = (np.arctan2(arm_R[1], arm_R[0]) - np.arctan2(forearm_R[1], forearm_R[0]))*180/np.pi
-        print("shoulder_L: ", shoulder_angle_L, "\tarm_L: ", arm_angle_L, "\n", "shoulder_R: ", shoulder_angle_R, "\tarm_R: ", arm_angle_R)
+        # print("shoulder_L: ", shoulder_angle_L, "\tarm_L: ", arm_angle_L, "\n", "shoulder_R: ", shoulder_angle_R, "\tarm_R: ", arm_angle_R)
 
         left_arm_state = (shoulder_angle_L, arm_angle_L)
         right_arm_state = (shoulder_angle_R, arm_angle_R)
