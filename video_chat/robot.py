@@ -1,4 +1,4 @@
-import cv2, socket, threading
+import cv2, socket, threading, keyboard
 import mediapipe as mp
 import numpy as np
 from utils import *
@@ -12,15 +12,17 @@ class Robot:
         self.mp_face = mp.solutions.face_detection
 
         # webcam setup
-        self.cap = cv2.VideoCapture(CAMERA_ID)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
+        # self.cap = cv2.VideoCapture(CAMERA_ID)
+        # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
+        # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
 
         # socket setup
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(ADDR)
         self.server.listen(1)
+        print("Waiting for client to connect ...")
         self.conn, self.addr = self.server.accept()
+        print("Connected to "+str(self.addr))
         
         # fps setup
         self.fps = Fps()
@@ -124,9 +126,8 @@ class Robot:
                     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
                     cv2.imshow('From Server(Robot)', image)
                     
-                    # # if press esc then break
-                    # if cv2.waitKey(5) & 0xFF == 27:
-                    #     break
+            if keyboard.is_pressed('Esc'):
+                break
 
 ############
 ### main ###
@@ -140,7 +141,7 @@ def main():
     thread_recv.start()
 
     # send streaming
-    robot.socket_send()
+    # robot.socket_send()
 
 if __name__ == '__main__':
     main()
