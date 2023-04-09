@@ -4,7 +4,7 @@ import fps
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 # fps initailization
 FPS = fps.FPS((255, 255, 255))
