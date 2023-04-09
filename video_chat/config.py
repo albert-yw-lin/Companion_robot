@@ -3,7 +3,8 @@ import cv2
 # socket
 HEADER = 64
 PORT = 5050
-SERVER = "192.168.0.11"
+# SERVER = "192.168.0.11" # at home
+SERVER = "127.0.0.1"
 ADDR = (SERVER, PORT)
 
 # face detection
