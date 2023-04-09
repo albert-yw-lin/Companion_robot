@@ -10,7 +10,7 @@ class Fps:
         self.counter+=1
         if self.counter%FREQUENCY == 9:
             self.time_prev = time.time()
-        if self.counter%self.freq == 0: 
+        if self.counter%FREQUENCY == 0: 
             self.counter = 0 # reset counter
             self.fps = int(1/(time.time() - self.time_prev))
         cv2.putText(image,"FPS:%d"%self.fps,FPS_POSITION,FPS_TEXT,1,FPS_COLOR,2)
