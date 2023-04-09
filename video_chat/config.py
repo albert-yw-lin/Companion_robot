@@ -3,9 +3,7 @@ import cv2
 # socket
 HEADER = 64
 PORT = 5050
-FORMAT = 'utf-8'
-DISCONNECT_MESSAGE = "!DISCONNECT"
-SERVER = "127.0.1.1"
+SERVER = "192.168.0.11"
 ADDR = (SERVER, PORT)
 
 # face detection
