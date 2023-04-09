@@ -6,6 +6,7 @@ class Fps:
     def __init__(self):
         self.time_prev = 0
         self.counter = 0
+        self.fps = 0
     def calc_draw_fps(self, image):
         self.counter+=1
         if self.counter%FREQUENCY == 9:

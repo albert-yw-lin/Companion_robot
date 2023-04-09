@@ -1,4 +1,4 @@
-import cv2, socket, threading
+import cv2, socket, threading, keyboard
 import mediapipe as mp
 import numpy as np
 from utils import *
@@ -171,7 +171,7 @@ class Laptop:
                     encode_image = encode_image[BYTE_PER_TIME:]
 
                 # if press esc then break
-                if cv2.waitKey(5) & 0xFF == 27:
+                if keyboard.is_pressed('Esc'):
                     break
 
                 # show the image on local machine(only for testing)
