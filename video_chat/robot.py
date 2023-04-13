@@ -8,15 +8,15 @@ class Robot:
 
     def __init__(self) -> None:
 
-        # mediapipe setup
+        ### mediapipe setup
         self.mp_face = mp.solutions.face_detection
 
-        # webcam setup
-        self.cap = cv2.VideoCapture(CAMERA_ID)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
+        ### webcam setup
+        # self.cap = cv2.VideoCapture(CAMERA_ID)
+        # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
+        # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
 
-        # socket setup
+        ### socket setup
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(ADDR)
         self.server.listen(1)
@@ -24,7 +24,7 @@ class Robot:
         self.conn, self.addr = self.server.accept()
         print("Connected to "+str(self.addr))
         
-        # fps setup
+        ### fps setup
         self.fps = Fps()
 
     def face_position(self, results):
@@ -38,90 +38,57 @@ class Robot:
 
 
     def socket_send(self):
-        with self.mp_face.FaceDetection(
-            model_selection=0, min_detection_confidence=0.5) as face:
+        # with self.mp_face.FaceDetection(
+        #     model_selection=0, min_detection_confidence=0.5) as face:
 
-            while self.cap.isOpened():
-                success, image = self.cap.read()
-                if not success:
-                    print("Ignoring empty camera frame.")
-                    # If loading a video, use 'break' instead of 'continue'.
-                    continue
+        #     while self.cap.isOpened():
+        #         success, image = self.cap.read()
+        #         if not success:
+        #             print("Ignoring empty camera frame.")
+        #             ### If loading a video, use 'break' instead of 'continue'.
+        #             continue
                 
-                ########################
-                ### image processing ###
-                ########################
+        #         ########################
+        #         ### image processing ###
+        #         ########################
 
-                # To improve performance, optionally mark the image as not writeable to
-                # pass by reference.
-                image.flags.writeable = False
-                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        #         ### To improve performance, optionally mark the image as not writeable to
+        #         ### pass by reference.
+        #         image.flags.writeable = False
+        #         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-                # get results from face detection and pose
-                results = face.process(image)
+        #         ### get results from face detection and pose
+        #         results = face.process(image)
 
-                # turn the image into writable and BGR mode
-                image.flags.writeable = True
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        #         ### turn the image into writable and BGR mode
+        #         image.flags.writeable = True
+        #         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-                # face position calculation
-                if results.detections: face_center = self.face_position(results)
-                
-                # draw fps onto the image
-                image = self.fps.calc_draw_fps(image)
+        #         ### face position calculation
+        #         if results.detections: face_center = self.face_position(results)
 
-                # Flip the image horizontally for a selfie-view display.
-                image = cv2.flip(image, 1)
+        #         ### Flip the image horizontally for a selfie-view display.
+        #         image = cv2.flip(image, 1)
+                                
+        #         ### draw fps onto the image
+        #         image = self.fps.calc_draw_fps(image)
 
-                #############################
-                ### sending face position ###
-                #############################
+        #         #############################
+        #         ### sending face position ###
+        #         #############################
 
-                ### TODO ###
+        #         ### TODO ###
 
-                #####################################
-                ### sending images through socket ###
-                #####################################
-
-                encode_image = cv2.imencode('.jpg', image)[1].tobytes()
-                # tell the server(robot) how much data should it receive
-                self.conn.sendall(len(encode_image).to_bytes(4, byteorder='big'))
-                while len(encode_image) > 0: # encode_image will varies in the while loop, so cannot use encode_image_length
-                    # send BYTE_PER_TIME bytes of data per time to avoid bottleneck and better manage the flow of data
-                    chunk = encode_image[:BYTE_PER_TIME]
-                    self.conn.sendall(chunk)
-                    encode_image = encode_image[BYTE_PER_TIME:]
-
-                # show the image on local machine(only for testing)
-                # cv2.imshow('video chat', image)
-                # if cv2.waitKey(5) & 0xFF == 27:
-                #     break
-
-            self.cap.release()
-            cv2.destroyAllWindows()
-            self.conn.close()
-            self.server.close()
-
-    def socket_recv(self, stop_event):
-        buffer = b''
+        #         ### sending images through socket
+        #         send_image(self.conn, image)
         while True:
-            data = self.conn.recv(BYTE_PER_TIME)
-            if (not data) or stop_event.is_set():
-                break
-            buffer += data
-            while True:
-                if len(buffer) <4: 
-                    break
-                encode_image_length = int.from_bytes(buffer[:4], byteorder='big')
-                if len(buffer) < encode_image_length + 4:
-                    break
-                encode_image = buffer[4:encode_image_length+4]
-                buffer = buffer[encode_image_length+4:]
-                image = np.frombuffer(encode_image, dtype=np.uint8)
-                image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-                cv2.imshow('From Server(Robot)', image)
-                cv2.waitKey(5)
-                    
+            image = np.ones((480, 640, 3))
+            send_image(self.conn, image)
+
+            # self.cap.release()
+            # cv2.destroyAllWindows()
+            # self.conn.close()
+            # self.server.close()                 
 
 ############
 ### main ###
@@ -129,26 +96,25 @@ class Robot:
 def main():
 
     try: 
-        # setup
+        ### setup
         robot = Robot()
-        stop_event = threading.Event()
 
-        # set another thread to recceive streaming
-        # thread_recv = threading.Thread(target=robot.socket_recv, args=(stop_event,))
-        # thread_recv.start()
-        # send streaming
+        ### set another thread to recceive streaming
+        thread_recv = threading.Thread(target=recv_image, args=(robot.conn,))
+        thread_recv.start()
+
+        ### send streaming
         robot.socket_send()
+
+        ### wait till the receive thread to end
+        thread_recv.join()
 
     except KeyboardInterrupt:
         print("KeyboardInterrupt.")
 
-    # except:
-    #     print("other error")
-
     finally:
-        robot.cap.release()
+        # robot.cap.release()
         cv2.destroyAllWindows()
-        stop_event.set()
         robot.conn.close()
         robot.server.close()
         print("Closing the program ...")

@@ -13,9 +13,9 @@ class Laptop:
         self.mp_pose = mp.solutions.pose
 
         # webcam setup
-        # self.cap = cv2.VideoCapture(CAMERA_ID)
-        # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
-        # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
+        self.cap = cv2.VideoCapture(CAMERA_ID)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
 
         # socket setup
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -123,27 +123,27 @@ class Laptop:
                 success, image = self.cap.read()
                 if not success:
                     print("Ignoring empty camera frame.")
-                    # If loading a video, use 'break' instead of 'continue'.
+                    ### If loading a video, use 'break' instead of 'continue'.
                     continue
                 
                 ########################
                 ### image processing ###
                 ########################
 
-                # To improve performance, optionally mark the image as not writeable to
-                # pass by reference.
+                ### To improve performance, optionally mark the image as not writeable to
+                ### pass by reference.
                 image.flags.writeable = False
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-                # get results from face detection and pose
+                ### get results from face detection and pose
                 results_face = face.process(image)
                 results_pose = pose.process(image)
 
-                # turn the image into writable and BGR mode
+                ### turn the image into writable and BGR mode
                 image.flags.writeable = True
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-                # post processing and calculation
+                ### post processing and calculation
                 if results_face.detections: image = self.face_crop(image, results_face)
                 if results_pose.pose_landmarks: left_arm_state, right_arm_state = self.arm_calc(results_pose)
                 
@@ -156,43 +156,8 @@ class Laptop:
 
                 ### TODO ###
 
-                #####################################
-                ### sending images through socket ###
-                #####################################
-
-                encode_image = cv2.imencode('.jpg', image)[1].tobytes()
-                # tell the server(robot) how much data should it receive
-                self.client.sendall(len(encode_image).to_bytes(4, byteorder='big'))
-                while len(encode_image) > 0: # encode_image will varies in the while loop, so cannot use encode_image_length
-                    # send BYTE_PER_TIME bytes of data per time to avoid bottleneck and better manage the flow of data
-                    chunk = encode_image[:BYTE_PER_TIME]
-                    self.client.sendall(chunk)
-                    encode_image = encode_image[BYTE_PER_TIME:]
-
-                # show the image on local machine(only for testing)
-                # cv2.imshow('video chat', image)
-                # if cv2.waitKey(5) & 0xFF == 27:
-                #     break
-
-    def socket_recv(self, stop_event):
-        buffer = b''
-        while True:
-            data = self.client.recv(BYTE_PER_TIME)
-            if (not data) or stop_event.is_set():
-                break
-            buffer += data
-            while True:
-                if len(buffer) <4: 
-                    break
-                encode_image_length = int.from_bytes(buffer[:4], byteorder='big')
-                if len(buffer) < encode_image_length + 4:
-                    break
-                encode_image = buffer[4:encode_image_length+4]
-                buffer = buffer[encode_image_length+4:]
-                image = np.frombuffer(encode_image, dtype=np.uint8)
-                image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-                cv2.imshow('From Server(Robot)', image)
-                cv2.waitKey(5)
+                ### sending images through socket
+                send_image(self.client, image)
                     
 
 ############
@@ -201,28 +166,28 @@ class Laptop:
 
 def main():
     try:
-        # setup
+        ### setup
         laptop = Laptop()
-        stop_event = threading.Event()
 
-        # set another thread to recceive streaming
-        thread_recv = threading.Thread(target=laptop.socket_recv, args=(stop_event,))
+        ### set another thread to recceive streaming
+        thread_recv = threading.Thread(target=recv_image, args=(laptop.client,))
         thread_recv.start()
-        while True: pass
 
-        # send streaming
-        # laptop.socket_send()
+        ### send streaming
+        laptop.socket_send()
+
+        ### wait till the receive thread to end
+        thread_recv.join()
     
     except KeyboardInterrupt:
         print("KeyboardInterrupt.")
-
-    # except:
-    #     print("other error")
     
     finally:
-        # laptop.cap.release()
+        ### close cap
+        laptop.cap.release()
+        laptop.client.close()
         cv2.destroyAllWindows()
-        stop_event.set()
+
         print("Closing the program ...")
 if __name__ == '__main__':
     main()

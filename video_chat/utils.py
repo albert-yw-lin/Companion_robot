@@ -1,5 +1,7 @@
 import time
 import cv2
+import socket
+import numpy as np
 from config import *
 
 class Fps:
@@ -20,4 +22,32 @@ class Fps:
 class Smooth_data():
     def  __init__(self, data) -> None:
         # simple exponential smoothing
-        self.data_prev_
+        pass
+
+def send_image(socket, image):
+    encode_image = cv2.imencode('.jpg', image)[1].tobytes()
+    ### tell the server(robot) how much data should it receive
+    socket.sendall(len(encode_image).to_bytes(4, byteorder='big'))
+    while len(encode_image) > 0: # encode_image will varies in the while loop, so cannot use encode_image_length
+        ### send BYTE_PER_TIME bytes of data per time to avoid bottleneck and better manage the flow of data
+        chunk = encode_image[:BYTE_PER_TIME]
+        socket.sendall(chunk)
+        encode_image = encode_image[BYTE_PER_TIME:]
+
+def recv_image(socket,):
+    buffer = b''
+    while True:
+        data = socket.recv(BYTE_PER_TIME)
+
+        ### close server and client simultaneously
+        if not data: break
+        
+        buffer += data
+        encode_image_length = int.from_bytes(buffer[:4], byteorder='big')
+        if len(buffer) > encode_image_length + 4:
+            encode_image = buffer[4:encode_image_length+4]
+            buffer = buffer[encode_image_length+4:]
+            image = np.frombuffer(encode_image, dtype=np.uint8)
+            image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+            cv2.imshow('recv_image', image)
+            cv2.waitKey(1)

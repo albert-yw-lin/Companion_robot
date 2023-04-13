@@ -2,7 +2,7 @@ import cv2
 
 # socket
 HEADER = 64
-PORT = 5050
+PORT = 9999
 # SERVER = "192.168.0.11" # at home
 SERVER = "127.0.0.1"
 ADDR = (SERVER, PORT)
@@ -24,4 +24,4 @@ FPS_POSITION = (0,30)
 CAMERA_ID = 0
 
 # socket
-BYTE_PER_TIME = 4096
+BYTE_PER_TIME = 65536 #2e16
