@@ -81,9 +81,9 @@ class Robot:
 
                 ### sending images through socket
                 send_image(self.conn, image)
-        while True:
-            image = np.ones((480, 640, 3))
-            send_image(self.conn, image)
+        # while True:
+        #     image = np.ones((480, 640, 3))
+        #     send_image(self.conn, image)
 
             # self.cap.release()
             # cv2.destroyAllWindows()
