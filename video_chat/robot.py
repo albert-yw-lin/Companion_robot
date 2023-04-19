@@ -12,9 +12,7 @@ class Robot:
         self.mp_face = mp.solutions.face_detection
 
         ### webcam setup
-        # self.cap = cv2.VideoCapture(CAMERA_ID)
-        # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
-        # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
+        self.cap = cv2.VideoCapture(gstreamer_pipeline(), cv2.CAP_GSTREAMER)
 
         ### socket setup
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -38,49 +36,49 @@ class Robot:
 
 
     def socket_send(self):
-        # with self.mp_face.FaceDetection(
-        #     model_selection=0, min_detection_confidence=0.5) as face:
+        with self.mp_face.FaceDetection(
+            model_selection=0, min_detection_confidence=0.5) as face:
 
-        #     while self.cap.isOpened():
-        #         success, image = self.cap.read()
-        #         if not success:
-        #             print("Ignoring empty camera frame.")
-        #             ### If loading a video, use 'break' instead of 'continue'.
-        #             continue
+            while self.cap.isOpened():
+                success, image = self.cap.read()
+                if not success:
+                    print("Ignoring empty camera frame.")
+                    ### If loading a video, use 'break' instead of 'continue'.
+                    continue
                 
-        #         ########################
-        #         ### image processing ###
-        #         ########################
+                ########################
+                ### image processing ###
+                ########################
 
-        #         ### To improve performance, optionally mark the image as not writeable to
-        #         ### pass by reference.
-        #         image.flags.writeable = False
-        #         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                ### To improve performance, optionally mark the image as not writeable to
+                ### pass by reference.
+                image.flags.writeable = False
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        #         ### get results from face detection and pose
-        #         results = face.process(image)
+                ### get results from face detection and pose
+                results = face.process(image)
 
-        #         ### turn the image into writable and BGR mode
-        #         image.flags.writeable = True
-        #         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                ### turn the image into writable and BGR mode
+                image.flags.writeable = True
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-        #         ### face position calculation
-        #         if results.detections: face_center = self.face_position(results)
+                ### face position calculation
+                if results.detections: face_center = self.face_position(results)
 
-        #         ### Flip the image horizontally for a selfie-view display.
-        #         image = cv2.flip(image, 1)
+                ### Flip the image horizontally for a selfie-view display.
+                image = cv2.flip(image, 1)
                                 
-        #         ### draw fps onto the image
-        #         image = self.fps.calc_draw_fps(image)
+                ### draw fps onto the image
+                image = self.fps.calc_draw_fps(image)
 
-        #         #############################
-        #         ### sending face position ###
-        #         #############################
+                #############################
+                ### sending face position ###
+                #############################
 
-        #         ### TODO ###
+                ### TODO ###
 
-        #         ### sending images through socket
-        #         send_image(self.conn, image)
+                ### sending images through socket
+                send_image(self.conn, image)
         while True:
             image = np.ones((480, 640, 3))
             send_image(self.conn, image)
