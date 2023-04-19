@@ -13,6 +13,8 @@ class Robot:
 
         ### webcam setup
         self.cap = cv2.VideoCapture(gstreamer_pipeline(), cv2.CAP_GSTREAMER)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
 
         ### socket setup
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
