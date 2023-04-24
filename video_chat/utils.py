@@ -54,11 +54,11 @@ def recv_image(socket,):
 
 def gstreamer_pipeline(
     sensor_id=0,
-    capture_width=640,
-    capture_height=480,
-    display_width=640,
-    display_height=480,
-    framerate=24,
+    capture_width=VIDEO_WIDTH,
+    capture_height=VIDEO_HEIGHT,
+    display_width=VIDEO_WIDTH,
+    display_height=VIDEO_HEIGHT,
+    framerate=20,
     flip_method=0,
 ):
     return (
