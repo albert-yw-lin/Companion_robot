@@ -13,6 +13,7 @@ FOREHEAD = 0.5 # porprotion with respect to bounding box
 EXPAND = 0.1 # porprotion with respect to bounding box
 VIDEO_HEIGHT = 480
 VIDEO_WIDTH = 640
+FRAME_RATE = 15
 
 #fps calc
 FREQUENCY = 10
@@ -24,4 +25,4 @@ FPS_POSITION = (0,30)
 CAMERA_ID = 0
 
 # socket
-BYTE_PER_TIME = 16384 #2e14
+BYTE_PER_TIME = 32768 #2e15

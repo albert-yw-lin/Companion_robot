@@ -16,6 +16,7 @@ class Laptop:
         self.cap = cv2.VideoCapture(CAMERA_ID)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
+        self.cap.set(cv2.CAP_PROP_FPS, FRAME_RATE) 
 
         # socket setup
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
