@@ -25,7 +25,7 @@ class Robot:
         print("Connected to "+str(self.addr))
         
         ### fps setup
-        self.fps = Fps()
+        # self.fps = Fps()
 
     def face_position(self, results):
         # only select the first face
@@ -71,7 +71,7 @@ class Robot:
                 image = cv2.flip(image, 1)
                                 
                 ### draw fps onto the image
-                image = self.fps.calc_draw_fps(image)
+                # image = self.fps.calc_draw_fps(image)
 
                 #############################
                 ### sending face position ###

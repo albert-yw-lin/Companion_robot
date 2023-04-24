@@ -29,7 +29,7 @@ class Laptop:
         self.height_prev = 0
         
         # fps setup
-        self.fps = Fps()
+        # self.fps = Fps()
 
     def face_crop(self, image, results):
         # only select the first face
@@ -149,7 +149,7 @@ class Laptop:
                 if results_pose.pose_landmarks: left_arm_state, right_arm_state = self.arm_calc(results_pose)
                 
                 image = self.post_process(image)
-                image = self.fps.calc_draw_fps(image)
+                # image = self.fps.calc_draw_fps(image)
 
                 #########################################
                 ### sending arm states through socket ###
