@@ -13,7 +13,7 @@ FOREHEAD = 0.5 # porprotion with respect to bounding box
 EXPAND = 0.1 # porprotion with respect to bounding box
 VIDEO_HEIGHT = 480
 VIDEO_WIDTH = 640
-FRAME_RATE = 15
+FRAME_RATE = 30
 
 #fps calc
 FREQUENCY = 10

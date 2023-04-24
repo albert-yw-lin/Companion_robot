@@ -50,15 +50,15 @@ def recv_image(socket,):
             image = np.frombuffer(encode_image, dtype=np.uint8)
             image = cv2.imdecode(image, cv2.IMREAD_COLOR)
             cv2.imshow('recv_image', image)
-            cv2.waitKey(47)
+            cv2.waitKey(33)
 
 def gstreamer_pipeline(
     sensor_id=0,
-    capture_width=3264,
-    capture_height=2464,
+    capture_width=1640,
+    capture_height=1232,
     display_width=640,
     display_height=480,
-    framerate=21,
+    framerate=30,
     flip_method=0,
 ):
     return (
