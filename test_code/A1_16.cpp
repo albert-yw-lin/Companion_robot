@@ -3,18 +3,65 @@
   Copyright (c) 2015 Wei-Shun You. XYZprinting Inc.  All right reserved.
 */
 //#include <Arduino.h>
+#include <termios.h>
 #include "A1_16.h"
-#include "JetsonNanoUart/uart.h"
+#include <iostream>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+using namespace std;
 
 unsigned char packet_received[BUFFER_SIZE];
 
 unsigned int checksum_1;
 unsigned int checksum_2;
 
-void A1_16_Ini(unsigned long baud){
-    DDRD &= ~_BV(DDD2);			//set the RXD input
-	PORTD |= _BV(PORTD2);		//pull-high the RXD pinout
-	Serial1.begin(baud,SERIAL_8N1);
+int uart = -1;
+
+/* Jetson Nano UART read and write function */
+template<typename T>
+void uart_write1(T data){
+  if (sizeof(data) != 1){
+    cout << "Size of data is not 1 byte. Terminate writing process.\n";
+    return;
+  }
+  int tx_len = write(uart, &data, 1);
+  if (tx_len != 1){
+      cout << "(write) Error opening UART \n";
+  }
+}
+
+unsigned char uart_read1(){
+  unsigned char data;
+  int rx_len = read(uart, &data, 1);
+  if (rx_len <0){
+      cout << "(read) Error opening UART \n";
+  }
+  return data;
+}
+
+/* check if any data is ready to be read, return 0 if not */
+int uart_available(){
+  int bytes_available;
+  ioctl(uart, FIONREAD, &bytes_available);
+  return bytes_available;
+}
+
+/* Jetson Nano UART initialzation function */
+void A1_16_Ini(){
+  uart = open("/dev/ttyTHS1", O_RDWR | O_NOCTTY | O_NDELAY);
+  if(uart < 0){
+      cout << "Error opening UART\n";
+      return;
+  }
+  struct termios uart_config;
+  tcgetattr(uart, &uart_config);
+  uart_config.c_lflag = 0;
+  tcflush(uart, TCIFLUSH);
+  tcsetattr(uart, TCSANOW, &uart_config);
+  uart_config.c_cflag = B115200 | CS8 | CLOCAL | CREAD;
+  uart_config.c_iflag = IGNPAR;
+  uart_config.c_oflag = 0;
 }
 
 void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD,  unsigned char _playtime, unsigned int _position){
@@ -39,6 +86,7 @@ void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD,  unsigned char _p
   for(_i = 0;_i < 5;_i++) checksum_1 ^= _data[_i];
   checksum_1 &= 0xfe;
   checksum_2 = (~checksum_1)&0xfe;
+  /*
   Serial1.write(0xff);
   Serial1.write(0xff);
   Serial1.write(0x0c);				//package size
@@ -46,7 +94,16 @@ void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD,  unsigned char _p
   Serial1.write(_CMD);
   Serial1.write(checksum_1);
   Serial1.write(checksum_2);
-  for(_i = 0;_i < 5;_i++) Serial1.write(_data[_i]);  
+  for(_i = 0;_i < 5;_i++) Serial1.write(_data[_i]); 
+  */
+  uart_write1(0xff);
+  uart_write1(0xff);
+  uart_write1(0x0c);
+  uart_write1(_pID);
+  uart_write1(_CMD);
+  uart_write1(checksum_1);
+  uart_write1(checksum_2);
+  for(_i = 0;_i < 5;_i++) uart_write1(_data[_i]);
 }
 
 void A1_16_SetSpeed(unsigned char _pID, unsigned char _playtime, int _speed){
@@ -61,6 +118,7 @@ void A1_16_SetSpeed(unsigned char _pID, unsigned char _playtime, int _speed){
   for(_i = 0;_i < 5;_i++) checksum_1 ^= _data[_i];
   checksum_1 &= 0xfe;
   checksum_2 = (~checksum_1)&0xfe;
+  /*
   Serial1.write(0xff);
   Serial1.write(0xff);
   Serial1.write(0x0c);				//package size
@@ -69,6 +127,15 @@ void A1_16_SetSpeed(unsigned char _pID, unsigned char _playtime, int _speed){
   Serial1.write(checksum_1);
   Serial1.write(checksum_2);
   for(_i = 0;_i < 5;_i++) Serial1.write(_data[_i]);
+  */
+  uart_write1(0xff);
+  uart_write1(0xff);
+  uart_write1(0x0c);  //package size
+  uart_write1(_pID);
+  uart_write1(CMD_I_JOG);
+  uart_write1(checksum_1);
+  uart_write1(checksum_2);
+  for(_i = 0;_i < 5;_i++) uart_write1(_data[_i]);
 }
 
 void A1_16_TorqueOff(unsigned char _pID){
@@ -83,6 +150,7 @@ void A1_16_TorqueOff(unsigned char _pID){
   for(_i = 0;_i < 5;_i++) checksum_1 ^= _data[_i];
   checksum_1 &= 0xfe;
   checksum_2 = (~checksum_1)&0xfe;
+  /*
   Serial1.write(0xff);
   Serial1.write(0xff);
   Serial1.write(0x0c);				//package size
@@ -90,13 +158,24 @@ void A1_16_TorqueOff(unsigned char _pID){
   Serial1.write(CMD_S_JOG);
   Serial1.write(checksum_1);
   Serial1.write(checksum_2);
-  for(_i = 0;_i < 5;_i++) Serial1.write(_data[_i]);  
+  for(_i = 0;_i < 5;_i++) Serial1.write(_data[_i]);
+  */
+  uart_write1(0xff);
+  uart_write1(0xff);
+  uart_write1(0x0c);  //package size
+  uart_write1(_pID);
+  uart_write1(CMD_S_JOG);
+  uart_write1(checksum_1);
+  uart_write1(checksum_2);
+  for(_i = 0;_i < 5;_i++) uart_write1(_data[_i]);
 }
 
 int A1_16_ReadData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, unsigned char _data_length){
-  while(Serial1.read() != -1);
+  unsigned char dummy; // dummy variable 
+  while(read(uart, &dummy, 1) != 0); // endless loop until no data received
   checksum_1 = (9^_pID^_CMD^_addr_start^_data_length)&0xfe;
   checksum_2 = (~checksum_1)&0xfe;
+  /*
   Serial1.write(0xff);
   Serial1.write(0xff);
   Serial1.write(0x09);						//packet size
@@ -106,6 +185,17 @@ int A1_16_ReadData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_s
   Serial1.write(checksum_2);
   Serial1.write(_addr_start);
   Serial1.write(_data_length);			//length of data
+  */
+  uart_write1(0xff);
+  uart_write1(0xff);
+  uart_write1(0x09);  //packet size
+  uart_write1(_pID);
+  uart_write1(_CMD);
+  uart_write1(checksum_1);
+  uart_write1(checksum_2);
+  uart_write1(_addr_start);
+  uart_write1(_data_length);  //length of data
+
   int value = A1_16_ReadPacket(_data_length);
   return value;
 }
@@ -119,11 +209,13 @@ int A1_16_ReadPacket(unsigned char _data_length){
   
   while (packet_pointer < packet_length){
 	timeout_counter = 0;
-	while(Serial1.available() <= 0){
+	/*while(Serial1.available() <= 0){*/
+  while(uart_available() <= 0){
 		timeout_counter++;
 		if(timeout_counter > 1000L) return -1;
 	}
-	packet_received[packet_pointer] = Serial1.read();
+	/*packet_received[packet_pointer] = Serial1.read();*/
+  packet_received[packet_pointer] = uart_read1();
 	if((packet_received[packet_pointer] == 0xff) && (header_check == 0)){
 		packet_pointer++;
 		header_check = 1;
@@ -150,6 +242,7 @@ int A1_16_ReadPacket(unsigned char _data_length){
 void A1_16_WriteData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, char _data_write){
   checksum_1 = (10^_pID^_CMD^_addr_start^0x01^_data_write)&0xfe;
   checksum_2 = (~checksum_1)&0xfe;
+  /*
   Serial1.write(0xff);
   Serial1.write(0xff);
   Serial1.write(10);			//package size
@@ -160,6 +253,17 @@ void A1_16_WriteData(unsigned char _pID, unsigned char _CMD, unsigned char _addr
   Serial1.write(_addr_start);
   Serial1.write(0x01);			//length of data
   Serial1.write(_data_write);
+  */
+  uart_write1(0xff);
+  uart_write1(0xff);
+  uart_write1(10);  //package size
+  uart_write1(_pID);
+  uart_write1(_CMD);
+  uart_write1(checksum_1);
+  uart_write1(checksum_2);
+  uart_write1(_addr_start);
+  uart_write1(0x01);  //length of data
+  uart_write1(_data_write);
 }
 
 void A1_16_WriteData2(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, int _data_write){
@@ -167,6 +271,7 @@ void A1_16_WriteData2(unsigned char _pID, unsigned char _CMD, unsigned char _add
   unsigned char BYTE_2 = (_data_write&0xff00)>>8;
   checksum_1 = (11^_pID^_CMD^_addr_start^0x02^BYTE_1^BYTE_2)&0xfe;
   checksum_2 = (~checksum_1)&0xfe;
+  /*
   Serial1.write(0xff);
   Serial1.write(0xff);
   Serial1.write(11);			//package size
@@ -178,11 +283,24 @@ void A1_16_WriteData2(unsigned char _pID, unsigned char _CMD, unsigned char _add
   Serial1.write(0x02);			//length of data
   Serial1.write(BYTE_1);
   Serial1.write(BYTE_2);
+  */
+  uart_write1(0xff);
+  uart_write1(0xff);
+  uart_write1(11);  //package size
+  uart_write1(_pID);
+  uart_write1(_CMD);
+  uart_write1(checksum_1);
+  uart_write1(checksum_2);
+  uart_write1(_addr_start);
+  uart_write1(0x02);  //length of data
+  uart_write1(BYTE_1);
+  uart_write1(BYTE_2);
 }
 
 void A1_16_Basic(unsigned char _pID, unsigned char _CMD){
   checksum_1 = (7^_pID^_CMD)&0xfe;
   checksum_2 = (~checksum_1)&0xfe;
+  /*
   Serial1.write(0xff);          //header
   Serial1.write(0xff);          //header
   Serial1.write(7);				//package size
@@ -190,4 +308,12 @@ void A1_16_Basic(unsigned char _pID, unsigned char _CMD){
   Serial1.write(_CMD);
   Serial1.write(checksum_1);
   Serial1.write(checksum_2);
+  */
+  uart_write1(0xff);  //header
+  uart_write1(0xff);  //header
+  uart_write1(7);  //package size
+  uart_write1(_pID);
+  uart_write1(_CMD);
+  uart_write1(checksum_1);
+  uart_write1(checksum_2);
 }

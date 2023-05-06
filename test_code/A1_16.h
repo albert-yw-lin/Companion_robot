@@ -4,7 +4,12 @@
 */
 
 //#include <Arduino.h>
-#include "JetsonNanoUart/uart.h"
+#include <termios.h>
+#include <iostream>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+using namespace std;
 
 #ifndef A1_16_h
 #define A1_16_h
@@ -118,6 +123,12 @@
 #define RAM_Omega_Ref                      0x4a		//  RO,2 byte
 #define RAM_Requested_Counts               0x4c		//  RO,2 byte
 #define RAM_ACK_Counts                     0x4e		//  RO,2 byte
+
+// uart global variable
+template<typename T>
+void uart_write1(T data);
+unsigned char uart_read1();
+int uart_available();
 
 void A1_16_Ini(unsigned long baud);
 void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD,  unsigned char _playtime, unsigned int _position);
