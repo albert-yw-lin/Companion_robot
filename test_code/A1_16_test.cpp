@@ -18,7 +18,7 @@ int main(){
         // std::cout << ReadPosition(id);
         SetPositionI_JOG(id,time,pos);
         now_pos = ReadPosition(id);
-        std::cout <<"now position:" << now_pos << endl;
+        std::cout <<"now position:" << now_pos << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(time*10));
     }
     // SetPositionI_JOG(id,time,pos);
