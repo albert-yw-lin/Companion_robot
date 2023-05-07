@@ -13,7 +13,7 @@ int main(){
     
     A1_16_Ini();
     SetPositionI_JOG(id,255,pos);
-    std::this_thread::sleep_for(std::chrono::milliseconds(255));
+    std::this_thread::sleep_for(std::chrono::milliseconds(2550));
     for (pos=0; pos<=1023; pos+=50){
         // std::cout << ReadPosition(id);
         SetPositionI_JOG(id,time,pos);
