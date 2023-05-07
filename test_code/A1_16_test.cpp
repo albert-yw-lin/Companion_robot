@@ -11,6 +11,8 @@ int main(){
     unsigned int pos = 0;
     
     A1_16_Ini();
+    SetPositionI_JOG(id,time*10,pos);
+    std::this_thread::sleep_for(std::chrono::milliseconds(time*10*10));
     for (pos=0; pos<=1023; pos++){
         // std::cout << ReadPosition(id);
         SetPositionI_JOG(id,time,pos);
