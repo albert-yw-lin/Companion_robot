@@ -7,7 +7,7 @@
 
 int main(){
     unsigned char id = 1;
-    unsigned char time = 50;
+    unsigned char time = 100;
     unsigned int pos = 0;
     unsigned int now_pos;
     unsigned char reset_time = 255;
