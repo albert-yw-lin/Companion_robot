@@ -46,6 +46,10 @@ int uart_available(){
   return bytes_available;
 }
 
+void uart_close(){
+  close(uart);
+}
+
 /* Jetson Nano UART initialzation function */
 void A1_16_Ini(){
   uart = open("/dev/ttyTHS1", O_RDWR | O_NOCTTY | O_NDELAY);

@@ -13,5 +13,6 @@ int main(){
     //     SetPositionI_JOG(id,time,pos);
     // }
     SetPositionI_JOG(id,time,pos);
+    uart_close();
     return 0;
 }

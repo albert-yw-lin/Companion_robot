@@ -123,6 +123,7 @@
 void uart_write1(uint8_t data);
 unsigned char uart_read1();
 int uart_available();
+void uart_close();
 
 void A1_16_Ini();
 void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD,  unsigned char _playtime, unsigned int _position);
