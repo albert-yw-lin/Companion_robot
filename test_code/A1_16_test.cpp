@@ -10,9 +10,10 @@ int main(){
     unsigned char time = 50;
     unsigned int pos = 0;
     unsigned int now_pos;
+    unsigned char reset_time = 255;
     
     A1_16_Ini();
-    SetPositionI_JOG(id,255,pos);
+    SetPositionI_JOG(id,reset_time,pos);
     std::this_thread::sleep_for(std::chrono::milliseconds(2550));
     for (pos=0; pos<=1023; pos+=50){
         // std::cout << ReadPosition(id);
