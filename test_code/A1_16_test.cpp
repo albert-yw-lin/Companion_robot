@@ -4,12 +4,13 @@
 
 int main(){
     unsigned char id = 1;
-    unsigned char time = 255;
+    unsigned char time = 10;
     unsigned int pos = 0;
+    
     A1_16_Ini();
-    // for (int i=0; i<=1023; i++){
-    //     SetPositionI_JOG(0,1,i);
-    // }
-    SetPositionI_JOG(id,time,pos);
+    for (pos=0; pos<=1023; pos++){
+        std::cout << ReadPosition(id);
+        SetPositionI_JOG(id,time,pos);
+    }
     return 0;
 }
