@@ -6,6 +6,6 @@ int main(){
     // for (int i=0; i<=1023; i++){
     //     SetPositionI_JOG(0,1,i);
     // }
-    SetPositionI_JOG(1,3,500);
+    SetPositionI_JOG('1','3',500);
     return 0;
 }
