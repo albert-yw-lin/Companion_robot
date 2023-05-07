@@ -4,8 +4,8 @@
 
 int main(){
     unsigned char id = 1;
-    unsigned char time = 10;
-    unsigned int pos = 0;
+    unsigned char time = 100;
+    unsigned int pos = 100;
     
     A1_16_Ini();
     // for (pos=0; pos<=1023; pos++){
