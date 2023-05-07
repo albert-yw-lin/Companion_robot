@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <cstdint>
 
 unsigned char packet_received[BUFFER_SIZE];
 
@@ -18,8 +19,7 @@ unsigned int checksum_2;
 int uart = -1;
 
 /* Jetson Nano UART read and write function */
-template<typename T>
-void uart_write1(T data){
+void uart_write1(uint8_t data){
   if (sizeof(data) != 1){
     std::cout << "Size of data is not 1 byte. Terminate writing process.\n";
     return;

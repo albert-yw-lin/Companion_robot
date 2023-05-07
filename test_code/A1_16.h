@@ -4,6 +4,7 @@
 */
 
 //#include <Arduino.h>
+#include <cstdint>
 
 #ifndef A1_16_h
 #define A1_16_h
@@ -119,8 +120,7 @@
 #define RAM_ACK_Counts                     0x4e		//  RO,2 byte
 
 // uart global variable
-template<typename T>
-void uart_write1(T data);
+void uart_write1(uint8_t data);
 unsigned char uart_read1();
 int uart_available();
 
