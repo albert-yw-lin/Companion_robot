@@ -47,6 +47,7 @@ int uart_available(){
 }
 
 void uart_close(){
+  std:: cout << "closing A1_16 uart...\n";
   close(uart);
 }
 
