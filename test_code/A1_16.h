@@ -4,12 +4,6 @@
 */
 
 //#include <Arduino.h>
-#include <termios.h>
-#include <iostream>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-using namespace std;
 
 #ifndef A1_16_h
 #define A1_16_h
@@ -130,7 +124,7 @@ void uart_write1(T data);
 unsigned char uart_read1();
 int uart_available();
 
-void A1_16_Ini(unsigned long baud);
+void A1_16_Ini();
 void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD,  unsigned char _playtime, unsigned int _position);
 void A1_16_SetSpeed(unsigned char _pID, unsigned char _playtime, int _speed);
 void A1_16_TorqueOff(unsigned char _pID);

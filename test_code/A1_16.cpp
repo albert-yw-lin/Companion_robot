@@ -9,7 +9,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
-using namespace std;
 
 unsigned char packet_received[BUFFER_SIZE];
 
@@ -22,12 +21,12 @@ int uart = -1;
 template<typename T>
 void uart_write1(T data){
   if (sizeof(data) != 1){
-    cout << "Size of data is not 1 byte. Terminate writing process.\n";
+    std::cout << "Size of data is not 1 byte. Terminate writing process.\n";
     return;
   }
   int tx_len = write(uart, &data, 1);
   if (tx_len != 1){
-      cout << "(write) Error opening UART \n";
+      std::cout << "(write) Error opening UART \n";
   }
 }
 
@@ -35,7 +34,7 @@ unsigned char uart_read1(){
   unsigned char data;
   int rx_len = read(uart, &data, 1);
   if (rx_len <0){
-      cout << "(read) Error opening UART \n";
+      std::cout << "(read) Error opening UART \n";
   }
   return data;
 }
@@ -51,7 +50,7 @@ int uart_available(){
 void A1_16_Ini(){
   uart = open("/dev/ttyTHS1", O_RDWR | O_NOCTTY | O_NDELAY);
   if(uart < 0){
-      cout << "Error opening UART\n";
+      std::cout << "Error opening UART\n";
       return;
   }
   struct termios uart_config;
