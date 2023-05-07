@@ -4,7 +4,7 @@
 
 int main(){
     unsigned char id = 1;
-    unsigned char time = 100;
+    unsigned char time = 255;
     unsigned int pos = 1023;
     
     A1_16_Ini();
