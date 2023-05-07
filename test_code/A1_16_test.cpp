@@ -3,9 +3,9 @@
 #include "A1_16.h"
 
 int main(){
-    uint8_t id = 1;
-    uint8_t time = 3;
-    uint8_t pos = 500;
+    unsigned char id = 1;
+    unsigned char time = 3;
+    unsigned int pos = 500;
     A1_16_Ini();
     // for (int i=0; i<=1023; i++){
     //     SetPositionI_JOG(0,1,i);
