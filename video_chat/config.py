@@ -4,7 +4,7 @@ import cv2
 HEADER = 64
 PORT = 9999
 PORT_POSE = 5050
-SERVER = "192.168.0.144" # in lab
+SERVER = "192.168.0.230" # in lab
 # SERVER = "192.168.0.11" # at home
 # SERVER = "127.0.0.1"
 ADDR = (SERVER, PORT)
