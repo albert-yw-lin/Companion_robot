@@ -22,7 +22,15 @@ class Robot:
         self.server.listen(1)
         print("Waiting for client to connect ...")
         self.conn, self.addr = self.server.accept()
-        print("Connected to "+str(self.addr))
+        print("Connected to client "+str(self.addr))
+
+        ### socket for pose calculation setup
+        # self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # self.server_pose.bind(ADDR_POSE)
+        # self.server_pose.listen(1)
+        # print("Waiting for client_pose to connect ...")
+        # self.conn_pose, self.addr_pose = self.server_pose.accept()
+        # print("Connected to client_pose "+str(self.addr_pose))
         
         ### fps setup
         # self.fps = Fps()

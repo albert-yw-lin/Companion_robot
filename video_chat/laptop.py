@@ -21,6 +21,8 @@ class Laptop:
         # socket setup
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect(ADDR)
+        # self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # self.client_pose.connect(ADDR_POSE)
 
         # face detection variable
         self.xmin_prev = 0
@@ -94,9 +96,8 @@ class Laptop:
         arm_angle_R = (np.arctan2(arm_R[1], arm_R[0]) - np.arctan2(forearm_R[1], forearm_R[0]))*180/np.pi
         # print("shoulder_L: ", shoulder_angle_L, "\tarm_L: ", arm_angle_L, "\n", "shoulder_R: ", shoulder_angle_R, "\tarm_R: ", arm_angle_R)
 
-        left_arm_state = (shoulder_angle_L, arm_angle_L)
-        right_arm_state = (shoulder_angle_R, arm_angle_R)
-        return left_arm_state, right_arm_state
+        arm_state = (shoulder_angle_L, arm_angle_L, shoulder_angle_R, arm_angle_R)
+        return arm_state
 
     def post_process(self, image):
         # resize
@@ -146,16 +147,13 @@ class Laptop:
 
                 ### post processing and calculation
                 if results_face.detections: image = self.face_crop(image, results_face)
-                if results_pose.pose_landmarks: left_arm_state, right_arm_state = self.arm_calc(results_pose)
+                if results_pose.pose_landmarks: arm_state = self.arm_calc(results_pose)
                 
                 image = self.post_process(image)
                 # image = self.fps.calc_draw_fps(image)
 
-                #########################################
-                ### sending arm states through socket ###
-                #########################################
-
-                ### TODO ###
+                ### sending arm states through socket
+                # send_image(self.client_pose, arm_state)
 
                 ### sending images through socket
                 send_image(self.client, image)
