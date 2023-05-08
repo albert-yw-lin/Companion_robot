@@ -21,7 +21,7 @@ class Fps:
 
 def send_image(socket, image):
     # encode_image = cv2.imencode('.jpg', image)[1].tobytes()
-    encode_image = cv2.imencode('.jpg', np.zeros((480,640,3)).astype(np.uint8)).tobytes()
+    encode_image = cv2.imencode('.jpg', np.zeros((480,640,3)).astype(np.uint8))[1].tobytes()
     ### tell the server(robot) how much data should it receive
     socket.sendall(len(encode_image).to_bytes(4, byteorder='big'))
     while len(encode_image) > 0: # encode_image will varies in the while loop, so cannot use encode_image_length
