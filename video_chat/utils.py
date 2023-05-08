@@ -30,8 +30,6 @@ def send_image(socket, image):
         socket.sendall(chunk)
         encode_image = encode_image[BYTE_PER_TIME:]
 
-    print(f"{time.time()} send image!")
-
 def recv_image(socket,):
     buffer = b''
     while True:
