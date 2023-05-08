@@ -19,11 +19,6 @@ class Fps:
         cv2.putText(image,"FPS:%d"%self.fps,FPS_POSITION,FPS_TEXT,1,FPS_COLOR,2)
         return image
 
-class Smooth_data():
-    def  __init__(self, data) -> None:
-        # simple exponential smoothing
-        pass
-
 def send_image(socket, image):
     encode_image = cv2.imencode('.jpg', image)[1].tobytes()
     ### tell the server(robot) how much data should it receive

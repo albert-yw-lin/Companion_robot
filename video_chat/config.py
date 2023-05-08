@@ -3,9 +3,12 @@ import cv2
 # socket
 HEADER = 64
 PORT = 9999
-SERVER = "192.168.0.11" # at home
+PORT_POSE = 5050
+SERVER = "140.112.14.76" # in lab
+# SERVER = "192.168.0.11" # at home
 # SERVER = "127.0.0.1"
 ADDR = (SERVER, PORT)
+ADDR_POSE = (SERVER, PORT_POSE)
 
 # face detection
 SMOOTH = 0.2 # 1 for no smooth
