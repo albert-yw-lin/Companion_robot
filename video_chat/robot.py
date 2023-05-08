@@ -62,18 +62,18 @@ class Robot:
 
                 ### To improve performance, optionally mark the image as not writeable to
                 ### pass by reference.
-                image.flags.writeable = False
-                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                # image.flags.writeable = False
+                # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-                ### get results from face detection and pose
-                results = face.process(image)
+                # ### get results from face detection and pose
+                # results = face.process(image)
 
-                ### turn the image into writable and BGR mode
-                image.flags.writeable = True
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                # ### turn the image into writable and BGR mode
+                # image.flags.writeable = True
+                # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-                ### face position calculation
-                if results.detections: face_center = self.face_position(results)
+                # ### face position calculation
+                # if results.detections: face_center = self.face_position(results)
 
                 ### Flip the image horizontally for a selfie-view display.
                 image = cv2.flip(image, 1)

@@ -134,22 +134,23 @@ class Laptop:
 
                 ### To improve performance, optionally mark the image as not writeable to
                 ### pass by reference.
-                image.flags.writeable = False
-                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                # image.flags.writeable = False
+                # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-                ### get results from face detection and pose
-                results_face = face.process(image)
-                results_pose = pose.process(image)
+                # ### get results from face detection and pose
+                # results_face = face.process(image)
+                # results_pose = pose.process(image)
 
-                ### turn the image into writable and BGR mode
-                image.flags.writeable = True
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                # ### turn the image into writable and BGR mode
+                # image.flags.writeable = True
+                # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-                ### post processing and calculation
-                if results_face.detections: image = self.face_crop(image, results_face)
-                if results_pose.pose_landmarks: arm_state = self.arm_calc(results_pose)
+                # ### post processing and calculation
+                # if results_face.detections: image = self.face_crop(image, results_face)
+                # if results_pose.pose_landmarks: arm_state = self.arm_calc(results_pose)
                 
-                image = self.post_process(image)
+                # image = self.post_process(image)
+                
                 # image = self.fps.calc_draw_fps(image)
 
                 ### sending arm states through socket
