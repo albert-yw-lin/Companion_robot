@@ -151,7 +151,7 @@ class Laptop:
                 
                 image = self.post_process(image)
                 
-                image = self.fps.calc_draw_fps(image)
+                # image = self.fps.calc_draw_fps(image)
 
                 ## sending arm states through socket
                 # send_image(self.client_pose, arm_state)
