@@ -45,9 +45,9 @@ def recv_image(socket,):
             buffer = buffer[encode_image_length+4:]
             image = np.frombuffer(encode_image, dtype=np.uint8)
             image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-            # cv2.imshow('recv_image', image)
-            # cv2.waitKey(33)
-            print(f"{time.time()} received image!")
+            cv2.imshow('recv_image', image)
+            cv2.waitKey(33)
+            # print(f"{time.time()} received image!")
 
 def gstreamer_pipeline(
     sensor_id=0,
