@@ -82,7 +82,6 @@ with mp_face.FaceDetection(
         image = cv2.flip(image, 1)
 
         cv2.imshow("wqijfqejg", image)
-        cv2.waitKey(0)
         if cv2.waitKey(5) & 0xFF == 27:
             break
 cap.release()
