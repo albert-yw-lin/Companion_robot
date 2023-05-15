@@ -8,6 +8,7 @@ ADDR_MAX_POSITION_LIMIT     = 48
 ADDR_MIN_POSITION_LIMIT     = 52
 ADDR_PROFILE_ACCELERATION   = 108
 ADDR_PROFILE_VELOCITY       = 112
+ADDR_MOVING_THRESHOLD       = 24
 LEN_GOAL_POSITION           = 4         # Data Byte Length
 # DXL_MINIMUM_POSITION_VALUE  = 0         # Refer to the Minimum Position Limit of product eManual
 # DXL_MAXIMUM_POSITION_VALUE  = 4095      # Refer to the Maximum Position Limit of product eManual
@@ -26,5 +27,6 @@ POS_LIMIT = [[0,4095],
              [0,4095],
              [0,4095],
              [0,4095]]
-PROFILE_ACCELERATION = 10000
-PROFILE_VELOCITY = 10000
+PROFILE_ACCELERATION = 25
+PROFILE_VELOCITY = 50
+MOVING_THRESHOLD = 20

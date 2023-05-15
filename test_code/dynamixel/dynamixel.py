@@ -34,9 +34,13 @@ class Dynamixel:
             self.check_txrx(dxl_comm_result, dxl_error)
 
             ### set profiles(acceleration, velocity) of each motor
-            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_PROFILE_ACCELERATION, PROFILE_ACCELERATION) # min
+            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_PROFILE_ACCELERATION, PROFILE_ACCELERATION)
             self.check_txrx(dxl_comm_result, dxl_error)
-            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_PROFILE_VELOCITY, PROFILE_VELOCITY) # max
+            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_PROFILE_VELOCITY, PROFILE_VELOCITY)
+            self.check_txrx(dxl_comm_result, dxl_error)
+
+            ### set moving threshold
+            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MOVING_THRESHOLD, MOVING_THRESHOLD)
             self.check_txrx(dxl_comm_result, dxl_error)
 
             # Enable Dynamixel#id Torque

@@ -80,3 +80,10 @@ with mp_face.FaceDetection(
 
         ### Flip the image horizontally for a selfie-view display.
         image = cv2.flip(image, 1)
+
+        cv2.imshow("wqijfqejg", image)
+        cv2.waitKey(0)
+        if cv2.waitKey(5) & 0xFF == 27:
+            break
+cap.release()
+motor.close()
