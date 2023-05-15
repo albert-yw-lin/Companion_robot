@@ -27,6 +27,10 @@ class Dynamixel:
             quit()
 
         for id in DXL_ID:
+            ### torque disable to change settings in EEPROM section
+            dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
+
             ### set position limits of each motor
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MIN_POSITION_LIMIT, POS_LIMIT[id][0]) # min
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_MIN_POSITION_LIMIT)
@@ -56,7 +60,7 @@ class Dynamixel:
             print("%s" % self.packetHandler.getTxRxResult(dxl_comm_result))
         elif dxl_error != 0:
             print("%s" % self.packetHandler.getRxPacketError(dxl_error), end="\t")
-            print("target address: %d", addr)
+            print("target address: %d"%addr)
  
     def check_groupSync(self, id, result, mode='r'):
         if result != True:
@@ -100,6 +104,6 @@ class Dynamixel:
         self.groupSyncRead.clearParam()
         for id in DXL_ID:
             dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
-            self.check_txrx(dxl_comm_result, dxl_error)
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
             self.portHandler.closePort()
 
