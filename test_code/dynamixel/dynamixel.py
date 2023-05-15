@@ -29,33 +29,34 @@ class Dynamixel:
         for id in DXL_ID:
             ### set position limits of each motor
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MIN_POSITION_LIMIT, POS_LIMIT[id][0]) # min
-            self.check_txrx(dxl_comm_result, dxl_error)
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_MIN_POSITION_LIMIT)
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MAX_POSITION_LIMIT, POS_LIMIT[id][1]) # max
-            self.check_txrx(dxl_comm_result, dxl_error)
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_MAX_POSITION_LIMIT)
 
             ### set profiles(acceleration, velocity) of each motor
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_PROFILE_ACCELERATION, PROFILE_ACCELERATION)
-            self.check_txrx(dxl_comm_result, dxl_error)
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_PROFILE_ACCELERATION)
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_PROFILE_VELOCITY, PROFILE_VELOCITY)
-            self.check_txrx(dxl_comm_result, dxl_error)
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_PROFILE_VELOCITY)
 
             ### set moving threshold
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MOVING_THRESHOLD, MOVING_THRESHOLD)
-            self.check_txrx(dxl_comm_result, dxl_error)
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_MOVING_THRESHOLD)
 
             # Enable Dynamixel#id Torque
             dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_ENABLE)
-            self.check_txrx(dxl_comm_result, dxl_error)
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
 
             # Add parameter storage for Dynamixel#id present position value
             dxl_addparam_result = self.groupSyncRead.addParam(id)
             self.check_groupSync(id, dxl_addparam_result, mode='r')
 
-    def check_txrx(self, dxl_comm_result, dxl_error=0):
+    def check_txrx(self, dxl_comm_result, dxl_error=0, addr=-1):
         if dxl_comm_result != COMM_SUCCESS:
             print("%s" % self.packetHandler.getTxRxResult(dxl_comm_result))
         elif dxl_error != 0:
-            print("%s" % self.packetHandler.getRxPacketError(dxl_error))
+            print("%s" % self.packetHandler.getRxPacketError(dxl_error), end="\t")
+            print("target address: %d", addr)
  
     def check_groupSync(self, id, result, mode='r'):
         if result != True:
