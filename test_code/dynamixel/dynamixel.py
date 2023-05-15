@@ -28,9 +28,9 @@ class Dynamixel:
 
         for id in DXL_ID:
             ### set position limits of each motor
-            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MIN_POSITION_LIMIT, POS_LIMIT[0][id]) # min
+            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MIN_POSITION_LIMIT, POS_LIMIT[id][0]) # min
             self.check_txrx(dxl_comm_result, dxl_error)
-            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MAX_POSITION_LIMIT, POS_LIMIT[1][id]) # max
+            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MAX_POSITION_LIMIT, POS_LIMIT[id][1]) # max
             self.check_txrx(dxl_comm_result, dxl_error)
 
             ### set profiles(acceleration, velocity) of each motor
