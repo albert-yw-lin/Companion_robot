@@ -29,7 +29,7 @@ POS_INIT = [2048, 1536, 2048, 2048, 2048, 2048]
 #              [1920,2680]]
 # ### if initial position exceed hard limit the program will shut down
 POS_LIMIT = [[1770,2230],
-             [1330,1680],
+             [1330,1700],
              [0,2048],
              [1430,2160],
              [0,2048],
