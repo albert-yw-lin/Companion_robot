@@ -36,5 +36,5 @@ POS_P_GAIN = [400,1000,400,400,400,400]
 ### face tracking
 FACE_CENTER_X = 0.5
 FACE_CENTER_Y = 0.7
-X_P_GAIN = 0.4
+X_P_GAIN = 0.35
 Y_P_GAIN = 0.5
