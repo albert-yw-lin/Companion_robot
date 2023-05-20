@@ -33,8 +33,7 @@ class Dynamixel:
             self.check_groupSync(id, dxl_addparam_result, mode='r')
 
             # Enable Dynamixel#id Torque
-            dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_ENABLE)
-            self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
+            self.set_torque(self, mode='e')
 
             ### set profiles(acceleration, velocity) of each motor
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_PROFILE_ACCELERATION, PROFILE_ACCELERATION)
@@ -48,8 +47,7 @@ class Dynamixel:
 
         for id in DXL_ID:
             ### torque disable to change settings in EEPROM section
-            dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
-            self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
+            self.set_torque(self, mode='d')
 
             ### set position limits of each motor
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MIN_POSITION_LIMIT, POS_LIMIT[id][0]) # min
@@ -62,8 +60,7 @@ class Dynamixel:
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_MOVING_THRESHOLD)
 
             # Enable Dynamixel#id Torque
-            dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_ENABLE)
-            self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
+            self.set_torque(self, mode='e')
             
         self.sync_write_pos(POS_INIT)
         time.sleep(2) # enough time to get to position
@@ -85,6 +82,12 @@ class Dynamixel:
                 print("[ID:%03d] groupSyncWrite failed" % id)
                 print("automatically terminate...")
                 quit()
+
+    def set_torque(self, mode='d'):
+        for id in DXL_ID:
+            if(mode=='e'):dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_ENABLE)
+            elif(mode=='d'):dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
 
     def sync_write_pos(self, goal_positions):
         ### add parameter
