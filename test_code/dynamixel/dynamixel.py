@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from dynamixel_sdk import *                    # Uses Dynamixel SDK library
 from config import *
+import time
 
 class Dynamixel:
 
@@ -30,6 +31,10 @@ class Dynamixel:
             ### torque disable to change settings in EEPROM section
             dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
+
+            ### initiailze motor posiotion
+            self.sync_write_pos(self, POS_INIT)
+            time.sleep(2) # enough time to get to position
 
             ### set position limits of each motor
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MIN_POSITION_LIMIT, POS_LIMIT[id][0]) # min
