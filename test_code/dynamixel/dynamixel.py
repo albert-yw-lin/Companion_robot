@@ -105,5 +105,5 @@ class Dynamixel:
         for id in DXL_ID:
             dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
-            self.portHandler.closePort()
+        self.portHandler.closePort()
 
