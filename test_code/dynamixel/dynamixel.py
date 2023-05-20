@@ -33,7 +33,7 @@ class Dynamixel:
             self.check_groupSync(id, dxl_addparam_result, mode='r')
 
             # Enable Dynamixel#id Torque
-            self.set_torque(self, mode='e')
+            self.set_torque(mode='e')
 
             ### set profiles(acceleration, velocity) of each motor
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_PROFILE_ACCELERATION, PROFILE_ACCELERATION)
@@ -47,7 +47,7 @@ class Dynamixel:
 
         for id in DXL_ID:
             ### torque disable to change settings in EEPROM section
-            self.set_torque(self, mode='d')
+            self.set_torque(mode='d')
 
             ### set position limits of each motor
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MIN_POSITION_LIMIT, POS_LIMIT[id][0]) # min
@@ -60,7 +60,7 @@ class Dynamixel:
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_MOVING_THRESHOLD)
 
             # Enable Dynamixel#id Torque
-            self.set_torque(self, mode='e')
+            self.set_torque(mode='e')
             
         self.sync_write_pos(POS_INIT)
         time.sleep(2) # enough time to get to position
