@@ -32,10 +32,11 @@ class Dynamixel:
             dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
 
-            ### initiailze motor posiotion
-            self.sync_write_pos(POS_INIT)
-            time.sleep(2) # enough time to get to position
+        ### initiailze motor posiotion
+        self.sync_write_pos(POS_INIT)
+        time.sleep(2) # enough time to get to position
 
+        for id in DXL_ID:
             ### set position limits of each motor
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MIN_POSITION_LIMIT, POS_LIMIT[id][0]) # min
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_MIN_POSITION_LIMIT)
