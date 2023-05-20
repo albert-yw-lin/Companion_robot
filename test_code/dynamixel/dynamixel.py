@@ -28,20 +28,13 @@ class Dynamixel:
             quit()
 
         for id in DXL_ID:
-            ### torque disable to change settings in EEPROM section
-            dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
+            # Add parameter storage for Dynamixel#id present position value
+            dxl_addparam_result = self.groupSyncRead.addParam(id)
+            self.check_groupSync(id, dxl_addparam_result, mode='r')
+
+            # Enable Dynamixel#id Torque
+            dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_ENABLE)
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
-
-        ### initiailze motor posiotion
-        self.sync_write_pos(POS_INIT)
-        time.sleep(2) # enough time to get to position
-
-        for id in DXL_ID:
-            ### set position limits of each motor
-            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MIN_POSITION_LIMIT, POS_LIMIT[id][0]) # min
-            self.check_txrx(dxl_comm_result, dxl_error, ADDR_MIN_POSITION_LIMIT)
-            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MAX_POSITION_LIMIT, POS_LIMIT[id][1]) # max
-            self.check_txrx(dxl_comm_result, dxl_error, ADDR_MAX_POSITION_LIMIT)
 
             ### set profiles(acceleration, velocity) of each motor
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_PROFILE_ACCELERATION, PROFILE_ACCELERATION)
@@ -53,13 +46,27 @@ class Dynamixel:
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MOVING_THRESHOLD, MOVING_THRESHOLD)
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_MOVING_THRESHOLD)
 
+
+        ### initiailze motor posiotion
+        self.sync_write_pos(POS_INIT)
+        time.sleep(2) # enough time to get to position
+
+        for id in DXL_ID:
+            ### torque disable to change settings in EEPROM section
+            dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
+
+            ### set position limits of each motor
+            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MIN_POSITION_LIMIT, POS_LIMIT[id][0]) # min
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_MIN_POSITION_LIMIT)
+            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MAX_POSITION_LIMIT, POS_LIMIT[id][1]) # max
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_MAX_POSITION_LIMIT)
+
             # Enable Dynamixel#id Torque
             dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_ENABLE)
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
 
-            # Add parameter storage for Dynamixel#id present position value
-            dxl_addparam_result = self.groupSyncRead.addParam(id)
-            self.check_groupSync(id, dxl_addparam_result, mode='r')
+            
 
     def check_txrx(self, dxl_comm_result, dxl_error=0, addr=-1):
         if dxl_comm_result != COMM_SUCCESS:
