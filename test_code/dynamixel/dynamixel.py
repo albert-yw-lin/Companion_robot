@@ -47,7 +47,7 @@ class Dynamixel:
 
         ### initiailze motor posiotion
         self.sync_write_pos(POS_INIT)
-        time.sleep(1) # enough time to get to position
+        time.sleep(2) # enough time to get to position
 
         for id in DXL_ID:
             ### torque disable to change settings in EEPROM section
@@ -67,7 +67,6 @@ class Dynamixel:
             self.set_torque(mode='e')
             
         self.sync_write_pos(POS_INIT)
-        time.sleep(1) # enough time to get to position
 
     def check_txrx(self, dxl_comm_result, dxl_error=0, addr=-1):
         if dxl_comm_result != COMM_SUCCESS:
