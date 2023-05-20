@@ -42,9 +42,7 @@ class Dynamixel:
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_PROFILE_VELOCITY, PROFILE_VELOCITY)
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_PROFILE_VELOCITY)
 
-            ### set moving threshold
-            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MOVING_THRESHOLD, MOVING_THRESHOLD)
-            self.check_txrx(dxl_comm_result, dxl_error, ADDR_MOVING_THRESHOLD)
+
 
 
         ### initiailze motor posiotion
@@ -62,11 +60,13 @@ class Dynamixel:
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MAX_POSITION_LIMIT, POS_LIMIT[id][1]) # max
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_MAX_POSITION_LIMIT)
 
+            ### set moving threshold
+            dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MOVING_THRESHOLD, MOVING_THRESHOLD)
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_MOVING_THRESHOLD)
+
             # Enable Dynamixel#id Torque
             dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_ENABLE)
-            self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
-
-            
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)    
 
     def check_txrx(self, dxl_comm_result, dxl_error=0, addr=-1):
         if dxl_comm_result != COMM_SUCCESS:
