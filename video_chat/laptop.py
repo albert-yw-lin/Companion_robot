@@ -21,8 +21,8 @@ class Laptop:
         # socket setup
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect(ADDR)
-        # self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # self.client_pose.connect(ADDR_POSE)
+        self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_pose.connect(ADDR_POSE)
 
         # face detection variable
         self.xmin_prev = 0
@@ -153,8 +153,12 @@ class Laptop:
                 
                 # image = self.fps.calc_draw_fps(image)
 
-                ## sending arm states through socket
-                # send_image(self.client_pose, arm_state)
+                ####################
+                ### sending data ###
+                ####################
+
+                ### sending arm states through socket
+                send_pose(self.client_pose, arm_state)
 
                 ### sending images through socket
                 send_image(self.client, image)
@@ -163,8 +167,7 @@ class Laptop:
 ############
 ### main ###
 ############
-
-def main():
+if __name__ == '__main__':
     try:
         ### setup
         laptop = Laptop()
@@ -186,8 +189,6 @@ def main():
         ### close cap
         laptop.cap.release()
         laptop.client.close()
+        laptop.client_pose.close()
         cv2.destroyAllWindows()
-
         print("Closing the program ...")
-if __name__ == '__main__':
-    main()

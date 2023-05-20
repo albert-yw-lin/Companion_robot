@@ -3,6 +3,7 @@ import cv2
 import socket
 import numpy as np
 from config import *
+import struct
 
 class Fps:
     def __init__(self):
@@ -30,7 +31,7 @@ def send_image(socket, image):
         socket.sendall(chunk)
         encode_image = encode_image[BYTE_PER_TIME:]
 
-def recv_image(socket,):
+def recv_image(socket):
     buffer = b''
     while True:
         data = socket.recv(BYTE_PER_TIME)
@@ -47,7 +48,17 @@ def recv_image(socket,):
             image = cv2.imdecode(image, cv2.IMREAD_COLOR)
             cv2.imshow('recv_image', image)
             cv2.waitKey(1)
-            # print(f"{time.time()} received image!")
+
+def send_pose(socket, pose):
+    ### pose: can be a list or tuple contains FOUR floating points
+    data = struct.pack('!4f', *pose)
+    socket.sendall(data)
+
+def recv_pose(socket):
+    ### 32 means 32 byte. ASSUME one floating points is 64bit (8 bytes) in python. 4*8=32
+    data = socket.recv(32)
+    pose = struct.unpack('!4f', data)
+    return pose
 
 def gstreamer_pipeline(
     sensor_id=0,

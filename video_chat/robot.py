@@ -4,6 +4,9 @@ import numpy as np
 from utils import *
 from config import *
 
+import rospy
+from std_msgs.msg import Float64MultiArray
+
 class Robot:
 
     def __init__(self) -> None:
@@ -25,31 +28,40 @@ class Robot:
         print("Connected to client "+str(self.addr))
 
         ### socket for pose calculation setup
-        # self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # self.server_pose.bind(ADDR_POSE)
-        # self.server_pose.listen(1)
-        # print("Waiting for client_pose to connect ...")
-        # self.conn_pose, self.addr_pose = self.server_pose.accept()
-        # print("Connected to client_pose "+str(self.addr_pose))
+        self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_pose.bind(ADDR_POSE)
+        self.server_pose.listen(1)
+        print("Waiting for client_pose to connect ...")
+        self.conn_pose, self.addr_pose = self.server_pose.accept()
+        print("Connected to client_pose "+str(self.addr_pose))
         
         ### fps setup
         # self.fps = Fps()
 
+        ### setup ROS message and node
+        self.face_center = Float64MultiArray()
+        self.pose = Float64MultiArray()
+        self.face_center_pub = rospy.Publisher('face_center', Float64MultiArray, queue_size=10)
+        self.pose_pub = rospy.Publisher('pose', Float64MultiArray, queue_size=10)
+        rospy.init_node('face_center', anonymous=True)
+        rospy.init_node('pose', anonymous=True)
+        rate = rospy.Rate(30) # 30Hz
+
     def face_position(self, results):
-        # only select the first face
+        ### only select the first face
         detection = results.detections[0]
 
-        # # example solution
+        ### example solution
         # mp_drawing.draw_detection(image, detection)
 
         box = detection.location_data.relative_bounding_box
+        return [box.xmin+0.5*box.width, box.ymin+0.5*box.height] # the Float64MultiArray data field is a list not tuple
 
-
-    def socket_send(self):
+    def detection(self):
         with self.mp_face.FaceDetection(
             model_selection=0, min_detection_confidence=0.5) as face:
 
-            while self.cap.isOpened():
+            while self.cap.isOpened() and (not rospy.is_shutdown()):
                 success, image = self.cap.read()
                 if not success:
                     print("Ignoring empty camera frame.")
@@ -62,18 +74,18 @@ class Robot:
 
                 ### To improve performance, optionally mark the image as not writeable to
                 ### pass by reference.
-                # image.flags.writeable = False
-                # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                image.flags.writeable = False
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-                # ### get results from face detection and pose
-                # results = face.process(image)
+                ### get results from face detection and pose
+                results = face.process(image)
 
-                # ### turn the image into writable and BGR mode
-                # image.flags.writeable = True
-                # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                ### turn the image into writable and BGR mode
+                image.flags.writeable = True
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-                # ### face position calculation
-                # if results.detections: face_center = self.face_position(results)
+                ### face position calculation, and assign to ROS message
+                if results.detections: self.face_center.data = self.face_position(results)
 
                 ### Flip the image horizontally for a selfie-view display.
                 image = cv2.flip(image, 1)
@@ -81,28 +93,27 @@ class Robot:
                 ### draw fps onto the image
                 # image = self.fps.calc_draw_fps(image)
 
-                #############################
-                ### sending face position ###
-                #############################
-
-                ### TODO ###
-
+                ###################################
+                ### sending and publishing data ###
+                ###################################
+                
                 ### sending images through socket
-                send_image(self.conn, image)
-        # while True:
-        #     image = np.ones((480, 640, 3))
-        #     send_image(self.conn, image)
+                send_image(self.conn, image)   
 
-            # self.cap.release()
-            # cv2.destroyAllWindows()
-            # self.conn.close()
-            # self.server.close()                 
+                ### receiving pose array (tuple)
+                self.pose.data = recv_pose(self.conn_pose)
+                rospy.loginfo(self.pose)
+                rospy.loginfo(self.face_center)
+                self.pose_pub.publish(self.pose)
+                self.face_center_pub.publish(self.face_center)
+
+
+                            
 
 ############
 ### main ###
 ############
-def main():
-
+if __name__ == '__main__':
     try: 
         ### setup
         robot = Robot()
@@ -112,20 +123,21 @@ def main():
         thread_recv.start()
 
         ### send streaming
-        robot.socket_send()
+        robot.detection()
 
         ### wait till the receive thread to end
         thread_recv.join()
 
     except KeyboardInterrupt:
-        print("KeyboardInterrupt.")
+        pass
+    
+    except rospy.ROSInterruptException:
+        pass
 
     finally:
         # robot.cap.release()
         cv2.destroyAllWindows()
         robot.conn.close()
+        robot.conn_pose.close()
         robot.server.close()
         print("Closing the program ...")
-
-if __name__ == '__main__':
-    main()
