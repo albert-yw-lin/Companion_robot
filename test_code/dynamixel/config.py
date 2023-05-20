@@ -21,12 +21,12 @@ TORQUE_DISABLE              = 0                 # Value for disabling the torque
 ### can modify if necessary (CAREFULLY)
 DEVICENAME                  = '/dev/ttyUSB0'
 DXL_MOVING_STATUS_THRESHOLD = 20                # Dynamixel moving status threshold
-POS_LIMIT = [[0,4095],
-             [0,4095],
-             [0,4095],
-             [0,4095],
-             [0,4095],
-             [0,4095]]
+POS_LIMIT = [[1770,2230],
+             [1330,1680],
+             [0,2048],
+             [1430,2160],
+             [0,2048],
+             [1940,2660]]
 PROFILE_ACCELERATION = 40
 PROFILE_VELOCITY = 80
 MOVING_THRESHOLD = 20
