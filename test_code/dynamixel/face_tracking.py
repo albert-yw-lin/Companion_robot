@@ -71,8 +71,8 @@ with mp_face.FaceDetection(
 
         ### face position calculation
         if results.detections: face_center_x, face_center_y = face_position(results)
-        error_x, error_y = 0.5-face_center_x, face_center_y-0.5
-        add_motor_x, add_motor_y = int(error_x*(62.2/360)*4095*0.5), int(error_y*(48.8/360)*4095*0.8)
+        error_x, error_y = 0.5-face_center_x, face_center_y-0.4
+        add_motor_x, add_motor_y = int(error_x*(62.2/360)*4095*0.4), int(error_y*(48.8/360)*4095*0.8)
         motor_pos = motor.sync_read_pos()
         motor_pos[0] += add_motor_x
         motor_pos[1] += add_motor_y
