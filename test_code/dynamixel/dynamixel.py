@@ -42,9 +42,6 @@ class Dynamixel:
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_PROFILE_VELOCITY, PROFILE_VELOCITY)
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_PROFILE_VELOCITY)
 
-
-
-
         ### initiailze motor posiotion
         self.sync_write_pos(POS_INIT)
         time.sleep(2) # enough time to get to position
@@ -66,7 +63,10 @@ class Dynamixel:
 
             # Enable Dynamixel#id Torque
             dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_ENABLE)
-            self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)    
+            self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
+            
+        self.sync_write_pos(POS_INIT)
+        time.sleep(2) # enough time to get to position
 
     def check_txrx(self, dxl_comm_result, dxl_error=0, addr=-1):
         if dxl_comm_result != COMM_SUCCESS:
