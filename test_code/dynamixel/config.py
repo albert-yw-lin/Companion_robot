@@ -22,13 +22,6 @@ TORQUE_DISABLE              = 0                 # Value for disabling the torque
 ### can modify if necessary (CAREFULLY)
 DEVICENAME                  = '/dev/ttyUSB0'
 POS_INIT = [2048, 1400, 2048, 2048, 2048, 2048]
-# POS_LIMIT = [[1750,2250],
-#              [1310,1700],
-#              [0,2100],
-#              [1410,2180],
-#              [0,2100],
-#              [1920,2680]]
-# ### if initial position exceed hard limit the program will shut down
 POS_LIMIT = [[1770,2230],
              [1200,1700],
              [0,2048],
@@ -38,4 +31,8 @@ POS_LIMIT = [[1770,2230],
 PROFILE_ACCELERATION = 40
 PROFILE_VELOCITY = 80
 MOVING_THRESHOLD = 5
-POS_P_GAIN = 500
+POS_P_GAIN = [400,550,400,400,400,400]
+
+### face tracking
+X_P_GAIN = 0.4
+Y_P_GAIN = 0.9

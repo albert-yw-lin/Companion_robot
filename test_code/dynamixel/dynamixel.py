@@ -42,7 +42,7 @@ class Dynamixel:
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_PROFILE_VELOCITY)
 
             ### set position P gain
-            dxl_comm_result, dxl_error = self.packetHandler.write2ByteTxRx(self.portHandler, id, ADDR_POS_P_GAIN, POS_P_GAIN)
+            dxl_comm_result, dxl_error = self.packetHandler.write2ByteTxRx(self.portHandler, id, ADDR_POS_P_GAIN, POS_P_GAIN[id])
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_POS_P_GAIN)
 
         ### initiailze motor posiotion

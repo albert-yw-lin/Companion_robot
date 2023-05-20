@@ -2,6 +2,7 @@ from dynamixel import Dynamixel
 import mediapipe as mp
 import numpy as np
 import cv2
+from config import *
 
 def gstreamer_pipeline(
     sensor_id=0,
@@ -71,8 +72,8 @@ with mp_face.FaceDetection(
 
         ### face position calculation
         if results.detections: face_center_x, face_center_y = face_position(results)
-        error_x, error_y = 0.5-face_center_x, face_center_y-0.7
-        add_motor_x, add_motor_y = int(error_x*(62.2/360)*4095*0.4), int(error_y*(48.8/360)*4095*0.9)
+        error_x, error_y = 0.5-face_center_x, face_center_y-0.65
+        add_motor_x, add_motor_y = int(error_x*(62.2/360)*4095*X_P_GAIN), int(error_y*(48.8/360)*4095*Y_P_GAIN)
         motor_pos = motor.sync_read_pos()
         motor_pos[0] += add_motor_x
         motor_pos[1] += add_motor_y
