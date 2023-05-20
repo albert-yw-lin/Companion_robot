@@ -33,7 +33,7 @@ class Dynamixel:
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
 
             ### initiailze motor posiotion
-            self.sync_write_pos(self, POS_INIT)
+            self.sync_write_pos(POS_INIT)
             time.sleep(2) # enough time to get to position
 
             ### set position limits of each motor
