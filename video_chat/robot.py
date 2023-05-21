@@ -144,7 +144,7 @@ if __name__ == '__main__':
         pass
 
     finally:
-        # robot.cap.release()
+        robot.cap.release()
         cv2.destroyAllWindows()
         robot.conn.close()
         # robot.conn_pose.close()
