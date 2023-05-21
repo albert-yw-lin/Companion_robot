@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import cv2, socket, threading
+import cv2, socket, threading, time
 import mediapipe as mp
 import numpy as np
 from utils import *
@@ -134,7 +134,7 @@ if __name__ == '__main__':
         ### send streaming
         # robot.detection()
         thread_detection = threading.Thread(target=robot.detection)
-
+        time.sleep(3)
         ### wait till the receive thread to end
         thread_recv.join()
 
