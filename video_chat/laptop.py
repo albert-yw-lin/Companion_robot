@@ -159,7 +159,7 @@ class Laptop:
                 ####################
 
                 ### sending arm states through socket
-                send_pose(self.client_pose, arm_state)
+                # send_pose(self.client_pose, arm_state)
 
                 ### sending images through socket
                 send_image(self.client, image)
