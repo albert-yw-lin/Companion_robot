@@ -22,19 +22,18 @@ class Fps:
         return image
 
 def send_image(socket, image):
-    encode_image = cv2.imencode('.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), JPEG_QUALITY])[1].tobytes()
-    # encode_image = cv2.imencode('.jpg', np.zeros((480,640,3)).astype(np.uint8))[1].tobytes()
-    ### tell the server(robot) how much data should it receive
-    print(socket.fileno())
-    if(socket.fileno()!=-1):socket.sendall(len(encode_image).to_bytes(4, byteorder='big'))
-    else:return
-
-    while len(encode_image) > 0: # encode_image will varies in the while loop, so cannot use encode_image_length
-        ### send BYTE_PER_TIME bytes of data per time to avoid bottleneck and better manage the flow of data
-        chunk = encode_image[:BYTE_PER_TIME]
-        if(socket.fileno()!=-1):socket.sendall(chunk)
-        else:return
-        encode_image = encode_image[BYTE_PER_TIME:]
+    try:
+        encode_image = cv2.imencode('.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), JPEG_QUALITY])[1].tobytes()
+        # encode_image = cv2.imencode('.jpg', np.zeros((480,640,3)).astype(np.uint8))[1].tobytes()
+        ### tell the server(robot) how much data should it receive
+        socket.sendall(len(encode_image).to_bytes(4, byteorder='big'))
+        while len(encode_image) > 0: # encode_image will varies in the while loop, so cannot use encode_image_length
+            ### send BYTE_PER_TIME bytes of data per time to avoid bottleneck and better manage the flow of data
+            chunk = encode_image[:BYTE_PER_TIME]
+            socket.sendall(chunk)
+            encode_image = encode_image[BYTE_PER_TIME:]
+    except BrokenPipeError:
+        return
 
 def recv_image(socket):
     buffer = b''
