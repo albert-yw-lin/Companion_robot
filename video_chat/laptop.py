@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import cv2, socket, threading
 import mediapipe as mp
 import numpy as np
@@ -115,7 +116,7 @@ class Laptop:
 
         return image
 
-    def socket_send(self):
+    def detection(self):
         with self.mp_face.FaceDetection(
             model_selection=0, min_detection_confidence=0.5) as face, \
             self.mp_pose.Pose(
@@ -177,7 +178,7 @@ if __name__ == '__main__':
         thread_recv.start()
 
         ### send streaming
-        laptop.socket_send()
+        laptop.detection()
 
         ### wait till the receive thread to end
         thread_recv.join()

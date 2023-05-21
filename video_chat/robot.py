@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import cv2, socket, threading
 import mediapipe as mp
 import numpy as np
@@ -45,7 +46,7 @@ class Robot:
         self.pose_pub = rospy.Publisher('pose', Float64MultiArray, queue_size=10)
         rospy.init_node('face_center', anonymous=True)
         rospy.init_node('pose', anonymous=True)
-        rate = rospy.Rate(30) # 30Hz
+        self.rate = rospy.Rate(30) # 30Hz
 
     def face_position(self, results):
         ### only select the first face
@@ -106,6 +107,7 @@ class Robot:
                 rospy.loginfo(self.face_center)
                 self.pose_pub.publish(self.pose)
                 self.face_center_pub.publish(self.face_center)
+                self.rate.sleep()
 
 
                             
