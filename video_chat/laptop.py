@@ -174,13 +174,13 @@ if __name__ == '__main__':
         ### setup
         laptop = Laptop()
 
-        ### set another thread to recceive streaming
-        thread_recv_image = threading.Thread(target=recv_image, args=(laptop.client,))
-        thread_recv_image.start()
-
         ### send streaming
         thread_detection = threading.Thread(target=laptop.detection)
         thread_detection.start()
+
+        ### set another thread to recceive streaming
+        thread_recv_image = threading.Thread(target=recv_image, args=(laptop.client,))
+        thread_recv_image.start()
 
         ### wait till the receive thread to end
         thread_detection.join()

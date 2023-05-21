@@ -115,16 +115,20 @@ if __name__ == '__main__':
         ### setup
         robot = Robot()
 
-        ### set another thread to recceive streaming
-        thread_recv_image = threading.Thread(target=recv_image, args=(robot.conn,))
-        thread_recv_image.start()
+        ### send streaming
+        thread_detection = threading.Thread(target=robot.detection)
+        thread_detection.start()
 
         thread_pose = threading.Thread(target=robot.recv_pose, args=(robot.conn,))
         thread_pose.start()
 
-        ### send streaming
-        thread_detection = threading.Thread(target=robot.detection)
-        thread_detection.start()
+        ### set another thread to recceive streaming
+        thread_recv_image = threading.Thread(target=recv_image, args=(robot.conn,))
+        thread_recv_image.start()
+
+        
+
+        
 
         ### wait till the receive thread to end
         thread_detection.join()
