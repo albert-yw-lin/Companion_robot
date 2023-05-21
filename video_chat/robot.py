@@ -29,12 +29,12 @@ class Robot:
         print("Connected to client "+str(self.addr))
 
         ### socket for pose calculation setup
-        # self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # self.server_pose.bind(ADDR_POSE)
-        # self.server_pose.listen(1)
-        # print("Waiting for client_pose to connect ...")
-        # self.conn_pose, self.addr_pose = self.server_pose.accept()
-        # print("Connected to client_pose "+str(self.addr_pose))
+        self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_pose.bind(ADDR_POSE)
+        self.server_pose.listen(1)
+        print("Waiting for client_pose to connect ...")
+        self.conn_pose, self.addr_pose = self.server_pose.accept()
+        print("Connected to client_pose "+str(self.addr_pose))
         
         ### fps setup
         # self.fps = Fps()
@@ -108,6 +108,7 @@ class Robot:
                 self.thread_send_image.start()   
 
                 ### receiving pose array (tuple)
+                pose = recv_pose(self.conn_pose)
                 # self.pose.data = recv_pose(self.conn_pose)
                 # rospy.loginfo(self.pose)
                 # rospy.loginfo(self.face_center)
