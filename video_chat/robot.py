@@ -147,6 +147,6 @@ if __name__ == '__main__':
         # robot.cap.release()
         cv2.destroyAllWindows()
         robot.conn.close()
-        robot.conn_pose.close()
+        # robot.conn_pose.close()
         robot.server.close()
         print("Closing the program ...")
