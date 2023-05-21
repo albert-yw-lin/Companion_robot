@@ -4,7 +4,7 @@ import fps
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(-1)
 
 # fps initailization
 FPS = fps.FPS((255, 255, 255))
@@ -63,7 +63,7 @@ with mp_face_detection.FaceDetection(
       image_width = image.shape[1]
 
       box = detection.location_data.relative_bounding_box
-
+      print(box)
       # add smooth filter to both box location and box area
       if 0 in (xmin_prev, ymin_prev, width_prev, height_prev):
         xmin_prev = box.xmin

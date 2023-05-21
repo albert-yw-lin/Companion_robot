@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import cv2, socket, threading, time
+import cv2, socket, threading, time, math
 import mediapipe as mp
 import numpy as np
 from utils import *
@@ -12,7 +12,11 @@ class Laptop:
         # mediapipe setup
         self.mp_face = mp.solutions.face_detection
         self.mp_pose = mp.solutions.pose
-        self.arm_state = [0.0, 0.0, 0.0, 0.0]
+        self.shoulder_angle_L = SHOULDER_INIT
+        self.arm_angle_L = ARM_INIT
+        self.shoulder_angle_R = SHOULDER_INIT
+        self.arm_angle_R = ARM_INIT
+        self.arm_state = (-self.shoulder_angle_L+90, self.arm_angle_L, -self.shoulder_angle_R+90, self.arm_angle_R)
 
         # webcam setup
         self.cap = cv2.VideoCapture(CAMERA_ID)
@@ -126,14 +130,24 @@ class Laptop:
             shoulder_R = -shoulder_L
             arm_R = np.array([landmark[14].x-landmark[12].x, landmark[14].y-landmark[12].y]).astype(float)
             forearm_R = np.array([landmark[16].x-landmark[14].x, landmark[16].y-landmark[14].y]).astype(float)
+            
+            ### calculate confidence
+            shoulder_angle_L_conf = landmark[13].visibility>=POSE_CONF and landmark[12].visibility>=POSE_CONF and landmark[11].visibility>=POSE_CONF
+            arm_angle_L_conf = landmark[15].visibility>=POSE_CONF and landmark[13].visibility>=POSE_CONF and landmark[11].visibility>=POSE_CONF
+            shoulder_angle_R_conf = landmark[14].visibility>=POSE_CONF and landmark[12].visibility>=POSE_CONF and landmark[11].visibility>=POSE_CONF
+            arm_angle_R_conf = landmark[16].visibility>=POSE_CONF and landmark[14].visibility>=POSE_CONF and landmark[12].visibility>=POSE_CONF
+            
             ### angle calculation
-            shoulder_angle_L = (np.arctan2(shoulder_L[1], shoulder_L[0]) - np.arctan2(arm_L[1], arm_L[0]))*180/np.pi
-            arm_angle_L = (np.arctan2(arm_L[1], arm_L[0]) - np.arctan2(forearm_L[1], forearm_L[0]))*180/np.pi
-            shoulder_angle_R = (np.arctan2(shoulder_R[1], shoulder_R[0]) - np.arctan2(arm_R[1], arm_R[0]))*180/np.pi
-            arm_angle_R = (np.arctan2(arm_R[1], arm_R[0]) - np.arctan2(forearm_R[1], forearm_R[0]))*180/np.pi
-            # print("shoulder_L: ", shoulder_angle_L, "\tarm_L: ", arm_angle_L, "\n", "shoulder_R: ", shoulder_angle_R, "\tarm_R: ", arm_angle_R)
+            if(shoulder_angle_L_conf):self.shoulder_angle_L = math.acos((shoulder_L@arm_L)/(np.linalg.norm(shoulder_L)*np.linalg.norm(arm_L)))*180/np.pi
+            else:self.shoulder_angle_L = SHOULDER_INIT
+            if(arm_angle_L_conf):self.arm_angle_L = math.acos((forearm_L@arm_L)/(np.linalg.norm(forearm_L)*np.linalg.norm(arm_L)))*180/np.pi
+            else: self.arm_angle_L = ARM_INIT
+            if(shoulder_angle_R_conf):self.shoulder_angle_R = math.acos((shoulder_R@arm_R)/(np.linalg.norm(shoulder_R)*np.linalg.norm(arm_R)))*180/np.pi
+            else: self.shoulder_angle_R = SHOULDER_INIT
+            if(arm_angle_R_conf):self.arm_angle_R = math.acos((forearm_R@arm_R)/(np.linalg.norm(forearm_R)*np.linalg.norm(arm_R)))*180/np.pi
+            else: self.arm_angle_R = ARM_INIT
 
-            self.arm_state = (shoulder_angle_L, arm_angle_L, shoulder_angle_R, arm_angle_R)
+            self.arm_state = (-self.shoulder_angle_L+90, self.arm_angle_L, -self.shoulder_angle_R+90, self.arm_angle_R)
 
         ### send socket
         ### pose: can be a list or tuple contains FOUR floating points

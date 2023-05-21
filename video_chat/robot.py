@@ -46,6 +46,9 @@ class Robot:
         self.is_first_send = True
         self.is_first_detection = True
 
+        self.face_center_x = 0
+        self.face_center_y = 0
+
     def send_face_center(self, image, face):
         ### To improve performance, optionally mark the image as not writeable to
         ### pass by reference.
@@ -64,10 +67,11 @@ class Robot:
             # mp_drawing.draw_detection(image, detection)
             box = detection.location_data.relative_bounding_box
             ### face position calculation, and assign to ROS message
-            self.face_center.data = [box.xmin+0.5*box.width, box.ymin+0.5*box.height] # the Float64MultiArray data field is a list not tuple
-            # rospy.loginfo(self.face_center)
-            self.face_center_pub.publish(self.face_center)
-            self.rate.sleep()
+            self.face_center_x, self.face_center_y = (box.xmin+0.5*box.width, box.ymin+0.5*box.height) # the Float64MultiArray data field is a list not tuple
+        self.face_center.data = [self.face_center_x, self.face_center_y]
+        # rospy.loginfo(self.face_center)
+        self.face_center_pub.publish(self.face_center)
+        self.rate.sleep()
 
         ### Flip the image horizontally for a selfie-view display.
         image = cv2.flip(image, 1)

@@ -1,4 +1,4 @@
-import cv2
+import cv2, math
 import mediapipe as mp
 import numpy as np
 import fps
@@ -41,6 +41,7 @@ with mp_pose.Pose(
     # pose angle calculation
     if results.pose_landmarks:
       landmark = results.pose_landmarks.landmark
+      # print(landmark)
 
       # left hand
       shoulder_L = np.array([landmark[11].x-landmark[12].x, landmark[11].y-landmark[12].y]).astype(float)
@@ -53,11 +54,17 @@ with mp_pose.Pose(
       forearm_R = np.array([landmark[16].x-landmark[14].x, landmark[16].y-landmark[14].y]).astype(float)
 
       # angle calculation
-      shoulder_angle_L = (np.arctan2(shoulder_L[1], shoulder_L[0]) - np.arctan2(arm_L[1], arm_L[0]))*180/np.pi
-      arm_angle_L = (np.arctan2(arm_L[1], arm_L[0]) - np.arctan2(forearm_L[1], forearm_L[0]))*180/np.pi
-      shoulder_angle_R = (np.arctan2(shoulder_R[1], shoulder_R[0]) - np.arctan2(arm_R[1], arm_R[0]))*180/np.pi
-      arm_angle_R = (np.arctan2(arm_R[1], arm_R[0]) - np.arctan2(forearm_R[1], forearm_R[0]))*180/np.pi
-      print("shoulder_L: ", shoulder_angle_L, "\tarm_L: ", arm_angle_L, "\n", "shoulder_R: ", shoulder_angle_R, "\tarm_R: ", arm_angle_R)
+      # shoulder_angle_L = (np.arctan2(shoulder_L[1], shoulder_L[0]) - np.arctan2(arm_L[1], arm_L[0]))*180/np.pi
+      # arm_angle_L = (np.arctan2(arm_L[1], arm_L[0]) - np.arctan2(forearm_L[1], forearm_L[0]))*180/np.pi
+      # shoulder_angle_R = (np.arctan2(shoulder_R[1], shoulder_R[0]) - np.arctan2(arm_R[1], arm_R[0]))*180/np.pi
+      # arm_angle_R = (np.arctan2(arm_R[1], arm_R[0]) - np.arctan2(forearm_R[1], forearm_R[0]))*180/np.pi
+      # print(landmark[13].visibility)
+      shoulder_angle_L = math.acos((shoulder_L@arm_L)/(np.linalg.norm(shoulder_L)*np.linalg.norm(arm_L)))*180/np.pi
+      arm_angle_L = math.acos((forearm_L@arm_L)/(np.linalg.norm(forearm_L)*np.linalg.norm(arm_L)))*180/np.pi
+      shoulder_angle_R = math.acos((shoulder_R@arm_R)/(np.linalg.norm(shoulder_R)*np.linalg.norm(arm_R)))*180/np.pi
+      arm_angle_R = math.acos((forearm_R@arm_R)/(np.linalg.norm(forearm_R)*np.linalg.norm(arm_R)))*180/np.pi
+
+      print("shoulder_L: ", -shoulder_angle_L+90, "\tarm_L: ", arm_angle_L, "\n", "shoulder_R: ", -shoulder_angle_R+90, "\tarm_R: ", arm_angle_R)
 
     # Flip the image horizontally for a selfie-view display.
     image = cv2.flip(image, 1)
