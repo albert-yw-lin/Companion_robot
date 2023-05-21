@@ -115,8 +115,8 @@ if __name__ == '__main__':
         ### setup
         robot = Robot()
 
-        # thread_pose = threading.Thread(target=robot.recv_pose, args=(robot.conn_pose,))
-        # thread_pose.start()
+        thread_pose = threading.Thread(target=robot.recv_pose, args=(robot.conn_pose,))
+        thread_pose.start()
 
         ### set another thread to recceive streaming
         thread_recv_image = threading.Thread(target=recv_image, args=(robot.conn,))
@@ -126,9 +126,8 @@ if __name__ == '__main__':
         robot.detection()
 
         ### wait till the receive thread to end
-        # thread_detection.join()
         thread_recv_image.join()
-        # thread_pose.join()
+        thread_pose.join()
 
     except KeyboardInterrupt:
         pass

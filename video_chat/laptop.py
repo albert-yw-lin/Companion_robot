@@ -161,8 +161,6 @@ class Laptop:
                 self.thread_send_pose = threading.Thread(target=self.send_pose, args = (image, pose))
                 self.thread_send_face_crop.start()
                 self.thread_send_pose.start()
-                # self.send_face_crop(image, face)
-                # self.send_pose(image, pose)
 
 
 
