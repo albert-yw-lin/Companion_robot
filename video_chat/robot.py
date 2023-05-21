@@ -40,12 +40,12 @@ class Robot:
         # self.fps = Fps()
 
         ### setup ROS message and node
-        self.face_center = Float64MultiArray()
-        self.pose = Float64MultiArray()
-        self.face_center_pub = rospy.Publisher('face_center', Float64MultiArray, queue_size=10)
-        self.pose_pub = rospy.Publisher('pose', Float64MultiArray, queue_size=10)
-        rospy.init_node('camera', anonymous=True)
-        self.rate = rospy.Rate(30) # 30Hz
+        # self.face_center = Float64MultiArray()
+        # self.pose = Float64MultiArray()
+        # self.face_center_pub = rospy.Publisher('face_center', Float64MultiArray, queue_size=10)
+        # self.pose_pub = rospy.Publisher('pose', Float64MultiArray, queue_size=10)
+        # rospy.init_node('camera', anonymous=True)
+        # self.rate = rospy.Rate(30) # 30Hz
 
     def face_position(self, results):
         ### only select the first face
