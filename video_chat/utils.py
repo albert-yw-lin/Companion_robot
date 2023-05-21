@@ -36,22 +36,25 @@ def send_image(socket, image):
         return
 
 def recv_image(socket):
-    buffer = b''
-    while True:
-        data = socket.recv(BYTE_PER_TIME)
+    try:
+        buffer = b''
+        while True:
+            data = socket.recv(BYTE_PER_TIME)
 
-        ### close server and client simultaneously
-        if not data: break
-        
-        buffer += data
-        encode_image_length = int.from_bytes(buffer[:4], byteorder='big')
-        if len(buffer) > encode_image_length + 4:
-            encode_image = buffer[4:encode_image_length+4]
-            buffer = buffer[encode_image_length+4:]
-            image = np.frombuffer(encode_image, dtype=np.uint8)
-            image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-            cv2.imshow('recv_image', image)
-            cv2.waitKey(1)
+            ### close server and client simultaneously
+            if not data: break
+            
+            buffer += data
+            encode_image_length = int.from_bytes(buffer[:4], byteorder='big')
+            if len(buffer) > encode_image_length + 4:
+                encode_image = buffer[4:encode_image_length+4]
+                buffer = buffer[encode_image_length+4:]
+                image = np.frombuffer(encode_image, dtype=np.uint8)
+                image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+                cv2.imshow('recv_image', image)
+                cv2.waitKey(1)
+    except ConnectionResetError:
+        return
 
 def send_pose(socket, pose):
     ### pose: can be a list or tuple contains FOUR floating points
