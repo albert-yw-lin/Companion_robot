@@ -23,6 +23,7 @@ class Laptop:
         # socket setup
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect(ADDR)
+        time.sleep(1)
         self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_pose.connect(ADDR_POSE)
 
@@ -150,18 +151,18 @@ class Laptop:
                     continue
 
                 ### start multi-thread
-                if(self.is_first_detection):
-                    self.is_first_detection = False
-                else: 
-                    self.thread_face_crop.join()
-                    self.thread_pose.join()
+                # if(self.is_first_detection):
+                #     self.is_first_detection = False
+                # else: 
+                #     self.thread_face_crop.join()
+                #     self.thread_pose.join()
 
-                self.thread_face_crop = threading.Thread(target=self.face_crop, args = (image, face))
-                self.thread_pose = threading.Thread(target=self.pose, args = (image, pose))
-                self.thread_face_crop.start()
-                self.thread_pose.start()
-                # self.face_crop(image, face)
-                # self.pose(image, pose)
+                # self.thread_face_crop = threading.Thread(target=self.face_crop, args = (image, face))
+                # self.thread_pose = threading.Thread(target=self.pose, args = (image, pose))
+                # self.thread_face_crop.start()
+                # self.thread_pose.start()
+                self.face_crop(image, face)
+                self.pose(image, pose)
 
 
 
