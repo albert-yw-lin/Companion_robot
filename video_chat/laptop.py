@@ -139,7 +139,7 @@ class Laptop:
             ### send socket
             ### pose: can be a list or tuple contains FOUR floating points
             data = struct.pack('!4f', *self.arm_state)
-            socket.sendall(data)
+            self.client_pose.sendall(data)
 
     def detection(self):
         while self.cap.isOpened():
