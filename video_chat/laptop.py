@@ -12,6 +12,7 @@ class Laptop:
         # mediapipe setup
         self.mp_face = mp.solutions.face_detection
         self.mp_pose = mp.solutions.pose
+        self.arm_state = [0.0, 0.0, 0.0, 0.0]
 
         # webcam setup
         self.cap = cv2.VideoCapture(CAMERA_ID)
