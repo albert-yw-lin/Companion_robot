@@ -46,38 +46,37 @@ class Robot:
         self.is_first_send = True
         self.is_first_detection = True
 
-    def face_center(self, image):
-        with self.mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.5) as face:
-            ### To improve performance, optionally mark the image as not writeable to
-            ### pass by reference.
-            image.flags.writeable = False
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            ### get results from face detection and pose
-            results = face.process(image)
-            ### turn the image into writable and BGR mode
-            image.flags.writeable = True
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    def face_center(self, image, face):
+        ### To improve performance, optionally mark the image as not writeable to
+        ### pass by reference.
+        image.flags.writeable = False
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        ### get results from face detection and pose
+        results = face.process(image)
+        ### turn the image into writable and BGR mode
+        image.flags.writeable = True
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-            if results.detections:
-                ### only select the first face
-                detection = results.detections[0]
-                ### example solution
-                # mp_drawing.draw_detection(image, detection)
-                box = detection.location_data.relative_bounding_box
-                ### face position calculation, and assign to ROS message
-                self.face_center.data = [box.xmin+0.5*box.width, box.ymin+0.5*box.height] # the Float64MultiArray data field is a list not tuple
-                rospy.loginfo(self.face_center)
-                self.face_center_pub.publish(self.face_center)
-                self.rate.sleep()
+        if results.detections:
+            ### only select the first face
+            detection = results.detections[0]
+            ### example solution
+            # mp_drawing.draw_detection(image, detection)
+            box = detection.location_data.relative_bounding_box
+            ### face position calculation, and assign to ROS message
+            self.face_center.data = [box.xmin+0.5*box.width, box.ymin+0.5*box.height] # the Float64MultiArray data field is a list not tuple
+            rospy.loginfo(self.face_center)
+            self.face_center_pub.publish(self.face_center)
+            self.rate.sleep()
 
-            ### Flip the image horizontally for a selfie-view display.
-            image = cv2.flip(image, 1)
-            ### sending images through socket
-            if(self.is_first_send):
-                self.is_first_send = False
-            else: self.thread_send_image.join()
-            self.thread_send_image =threading.Thread(target=send_image, args=(self.conn, image))
-            self.thread_send_image.start()   
+        ### Flip the image horizontally for a selfie-view display.
+        image = cv2.flip(image, 1)
+        ### sending images through socket
+        if(self.is_first_send):
+            self.is_first_send = False
+        else: self.thread_send_image.join()
+        self.thread_send_image =threading.Thread(target=send_image, args=(self.conn, image))
+        self.thread_send_image.start()   
 
     def recv_pose(self, socket):
         while True:
@@ -92,20 +91,20 @@ class Robot:
             self.rate.sleep()
 
     def detection(self):
+        with self.mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.5) as face:
+            while self.cap.isOpened() and (not rospy.is_shutdown()):
+                success, image = self.cap.read()
+                if not success:
+                    print("Ignoring empty camera frame.")
+                    ### If loading a video, use 'break' instead of 'continue'.
+                    continue
 
-        while self.cap.isOpened() and (not rospy.is_shutdown()):
-            success, image = self.cap.read()
-            if not success:
-                print("Ignoring empty camera frame.")
-                ### If loading a video, use 'break' instead of 'continue'.
-                continue
-
-            if(self.is_first_detection):
-                self.is_first_detection = False
-            else: 
-                self.thread_face_center.join()
-            self.thread_face_center = threading.Thread(target=self.face_center, args = (image,))
-            self.thread_face_center.start()
+                if(self.is_first_detection):
+                    self.is_first_detection = False
+                else: 
+                    self.thread_face_center.join()
+                self.thread_face_center = threading.Thread(target=self.face_center, args = (image,))
+                self.thread_face_center.start()
             
 ############
 ### main ###
