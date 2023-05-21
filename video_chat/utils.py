@@ -57,7 +57,7 @@ def send_pose(socket, pose):
 
 def recv_pose(socket):
     ### 32 means 32 byte. ASSUME one floating points is 64bit (8 bytes) in python. 4*8=32
-    data = socket.recv(32)
+    data = socket.recv(16)
     pose = struct.unpack('!4f', data)
     return pose
 
