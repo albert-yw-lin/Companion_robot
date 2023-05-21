@@ -193,6 +193,13 @@ if __name__ == '__main__':
     
     except KeyboardInterrupt:
         print("KeyboardInterrupt.")
+
+        ### close cap
+        laptop.cap.release()
+        laptop.client.close()
+        # laptop.client_pose.close()
+        cv2.destroyAllWindows()
+        print("Closing the program ...")
     
     finally:
         ### close cap
