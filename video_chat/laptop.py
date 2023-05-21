@@ -22,8 +22,8 @@ class Laptop:
         # socket setup
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect(ADDR)
-        # self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # self.client_pose.connect(ADDR_POSE)
+        self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_pose.connect(ADDR_POSE)
 
         # face detection variable
         self.xmin_prev = 0
@@ -142,7 +142,7 @@ class Laptop:
 
                 ### get results from face detection and pose
                 results_face = face.process(image)
-                # results_pose = pose.process(image)
+                results_pose = pose.process(image)
 
                 ### turn the image into writable and BGR mode
                 image.flags.writeable = True
@@ -150,7 +150,7 @@ class Laptop:
 
                 ### post processing and calculation
                 if results_face.detections: image = self.face_crop(image, results_face)
-                # if results_pose.pose_landmarks: arm_state = self.arm_calc(results_pose)
+                if results_pose.pose_landmarks: arm_state = self.arm_calc(results_pose)
                 
                 image = self.post_process(image)
                 
@@ -161,7 +161,7 @@ class Laptop:
                 ####################
 
                 ### sending arm states through socket
-                # send_pose(self.client_pose, arm_state)
+                send_pose(self.client_pose, arm_state)
 
                 ### sending images through socket
                 if(self.is_first_send):
