@@ -27,6 +27,7 @@ class Robot:
         print("Waiting for client to connect ...")
         self.conn, self.addr = self.server.accept()
         print("Connected to client "+str(self.addr))
+        time.sleep(1)
 
         ### socket for pose calculation setup
         self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
