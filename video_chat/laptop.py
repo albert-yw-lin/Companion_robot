@@ -34,9 +34,6 @@ class Laptop:
         # fps setup
         # self.fps = Fps()
 
-        # send image thread
-        self.is_first_send = True
-
     def face_crop(self, image, results):
         # only select the first face
         detection = results.detections[0]
@@ -186,8 +183,7 @@ if __name__ == '__main__':
         thread_recv_image.start()
 
         ### send streaming
-        thread_detection = threading.Thread(target=laptop.detection)
-        time.sleep(3)
+        laptop.detection()
         ### wait till the receive thread to end
         thread_recv_image.join()
     
