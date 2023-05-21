@@ -186,20 +186,13 @@ if __name__ == '__main__':
         thread_recv_image.start()
 
         ### send streaming
-        laptop.detection()
+        thread_detection = threading.Thread(target=laptop.detection)
 
         ### wait till the receive thread to end
         thread_recv_image.join()
     
     except KeyboardInterrupt:
         print("KeyboardInterrupt.")
-
-        ### close cap
-        laptop.cap.release()
-        laptop.client.close()
-        # laptop.client_pose.close()
-        cv2.destroyAllWindows()
-        print("Closing the program ...")
     
     finally:
         ### close cap

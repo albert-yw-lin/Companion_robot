@@ -132,7 +132,8 @@ if __name__ == '__main__':
         thread_recv.start()
 
         ### send streaming
-        robot.detection()
+        # robot.detection()
+        thread_detection = threading.Thread(target=robot.detection)
 
         ### wait till the receive thread to end
         thread_recv.join()
