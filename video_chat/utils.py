@@ -29,9 +29,9 @@ def send_image(socket, image):
         socket.sendall(len(encode_image).to_bytes(4, byteorder='big'))
         while len(encode_image) > 0: # encode_image will varies in the while loop, so cannot use encode_image_length
             ### send BYTE_PER_TIME bytes of data per time to avoid bottleneck and better manage the flow of data
-            chunk = encode_image[:BYTE_PER_TIME]
+            chunk = encode_image[:SEND_BYTE_PER_TIME]
             socket.sendall(chunk)
-            encode_image = encode_image[BYTE_PER_TIME:]
+            encode_image = encode_image[SEND_BYTE_PER_TIME:]
     except BrokenPipeError:
         pass
 
@@ -39,7 +39,7 @@ def recv_image(socket):
     try:
         buffer = b''
         while True:
-            data = socket.recv(BYTE_PER_TIME)
+            data = socket.recv(RECV_BYTE_PER_TIME)
 
             ### close server and client simultaneously
             if not data: break
