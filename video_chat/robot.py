@@ -47,6 +47,9 @@ class Robot:
         # rospy.init_node('camera', anonymous=True)
         # self.rate = rospy.Rate(30) # 30Hz
 
+        # send image thread
+        self.is_first_send = True
+
     def face_position(self, results):
         ### only select the first face
         detection = results.detections[0]
@@ -98,7 +101,12 @@ class Robot:
                 ###################################
                 
                 ### sending images through socket
-                send_image(self.conn, image)   
+                # send_image(self.conn, image)
+                if(self.is_first_send):
+                    self.is_first_send = False
+                else: self.thread_send_image.join()
+                self.thread_send_image =threading.Thread(target=send_image, args=(self.conn, image))
+                self.thread_send_image.start()   
 
                 ### receiving pose array (tuple)
                 # self.pose.data = recv_pose(self.conn_pose)

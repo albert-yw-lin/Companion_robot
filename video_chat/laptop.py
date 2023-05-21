@@ -34,6 +34,9 @@ class Laptop:
         # fps setup
         # self.fps = Fps()
 
+        # send image thread
+        self.is_first_send = True
+
     def face_crop(self, image, results):
         # only select the first face
         detection = results.detections[0]
@@ -162,7 +165,12 @@ class Laptop:
                 # send_pose(self.client_pose, arm_state)
 
                 ### sending images through socket
-                send_image(self.client, image)
+                if(self.is_first_send):
+                    self.is_first_send = False
+                else: self.thread_send_image.join()
+                self.thread_send_image =threading.Thread(target=send_image, args=(self.client, image))
+                self.thread_send_image.start()
+
                     
 
 ############
@@ -174,14 +182,14 @@ if __name__ == '__main__':
         laptop = Laptop()
 
         ### set another thread to recceive streaming
-        thread_recv = threading.Thread(target=recv_image, args=(laptop.client,))
-        thread_recv.start()
+        thread_recv_image = threading.Thread(target=recv_image, args=(laptop.client,))
+        thread_recv_image.start()
 
         ### send streaming
         laptop.detection()
 
         ### wait till the receive thread to end
-        thread_recv.join()
+        thread_recv_image.join()
     
     except KeyboardInterrupt:
         print("KeyboardInterrupt.")
