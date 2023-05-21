@@ -118,6 +118,7 @@ if __name__ == '__main__':
         ### send streaming
         thread_detection = threading.Thread(target=robot.detection)
         thread_detection.start()
+        time.sleep(2)
 
         thread_pose = threading.Thread(target=robot.recv_pose, args=(robot.conn,))
         thread_pose.start()
@@ -125,10 +126,6 @@ if __name__ == '__main__':
         ### set another thread to recceive streaming
         thread_recv_image = threading.Thread(target=recv_image, args=(robot.conn,))
         thread_recv_image.start()
-
-        
-
-        
 
         ### wait till the receive thread to end
         thread_detection.join()

@@ -177,6 +177,7 @@ if __name__ == '__main__':
         ### send streaming
         thread_detection = threading.Thread(target=laptop.detection)
         thread_detection.start()
+        time.sleep(2)
 
         ### set another thread to recceive streaming
         thread_recv_image = threading.Thread(target=recv_image, args=(laptop.client,))
