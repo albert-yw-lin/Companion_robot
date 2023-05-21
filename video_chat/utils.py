@@ -33,7 +33,7 @@ def send_image(socket, image):
             socket.sendall(chunk)
             encode_image = encode_image[BYTE_PER_TIME:]
     except BrokenPipeError:
-        return
+        pass
 
 def recv_image(socket):
     try:
@@ -54,7 +54,7 @@ def recv_image(socket):
                 cv2.imshow('recv_image', image)
                 cv2.waitKey(1)
     except ConnectionResetError:
-        return
+        pass
 
 def send_pose(socket, pose):
     ### pose: can be a list or tuple contains FOUR floating points
