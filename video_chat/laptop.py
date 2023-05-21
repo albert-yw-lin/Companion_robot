@@ -23,7 +23,6 @@ class Laptop:
         # socket setup
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect(ADDR)
-        time.sleep(1)
         self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_pose.connect(ADDR_POSE)
 
