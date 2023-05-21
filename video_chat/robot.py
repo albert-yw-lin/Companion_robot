@@ -46,7 +46,7 @@ class Robot:
         self.is_first_send = True
         self.is_first_detection = True
 
-    def face_center(self, image, face):
+    def send_face_center(self, image, face):
         ### To improve performance, optionally mark the image as not writeable to
         ### pass by reference.
         image.flags.writeable = False
@@ -102,10 +102,10 @@ class Robot:
                 if(self.is_first_detection):
                     self.is_first_detection = False
                 else: 
-                    self.thread_face_center.join()
-                self.thread_face_center = threading.Thread(target=self.face_center, args = (image, face))
-                self.thread_face_center.start()
-                # self.face_center(image)
+                    self.thread_send_face_center.join()
+                self.thread_send_face_center = threading.Thread(target=self.send_face_center, args = (image, face))
+                self.thread_send_face_center.start()
+                # self.send_face_center(image)
             
 ############
 ### main ###

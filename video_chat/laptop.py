@@ -36,7 +36,7 @@ class Laptop:
         self.is_first_send_image = True
         self.is_first_detection = True
 
-    def face_crop(self, image, face):
+    def send_face_crop(self, image, face):
         ### To improve performance, optionally mark the image as not writeable to
         ### pass by reference.
         image.flags.writeable = False
@@ -106,7 +106,7 @@ class Laptop:
         self.thread_send_image = threading.Thread(target=send_image, args=(self.client, image))
         self.thread_send_image.start()
     
-    def pose(self, image, pose):
+    def send_pose(self, image, pose):
         ### To improve performance, optionally mark the image as not writeable to
         ### pass by reference.
         image.flags.writeable = False
@@ -154,15 +154,15 @@ class Laptop:
                 if(self.is_first_detection):
                     self.is_first_detection = False
                 else: 
-                    self.thread_face_crop.join()
-                    self.thread_pose.join()
+                    self.thread_send_face_crop.join()
+                    self.thread_send_pose.join()
 
-                self.thread_face_crop = threading.Thread(target=self.face_crop, args = (image, face))
-                self.thread_pose = threading.Thread(target=self.pose, args = (image, pose))
-                self.thread_face_crop.start()
-                self.thread_pose.start()
-                # self.face_crop(image, face)
-                # self.pose(image, pose)
+                self.thread_send_face_crop = threading.Thread(target=self.send_face_crop, args = (image, face))
+                self.thread_send_pose = threading.Thread(target=self.send_pose, args = (image, pose))
+                self.thread_send_face_crop.start()
+                self.thread_send_pose.start()
+                # self.send_face_crop(image, face)
+                # self.send_pose(image, pose)
 
 
 
