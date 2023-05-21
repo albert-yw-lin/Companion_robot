@@ -47,6 +47,8 @@ class Robot:
         # rospy.init_node('camera', anonymous=True)
         # self.rate = rospy.Rate(30) # 30Hz
 
+        self.is_first_send = True
+
     def face_position(self, results):
         ### only select the first face
         detection = results.detections[0]
