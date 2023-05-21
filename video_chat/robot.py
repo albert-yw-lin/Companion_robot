@@ -124,14 +124,16 @@ if __name__ == '__main__':
         robot = Robot()
 
         ### set another thread to recceive streaming
-        thread_recv = threading.Thread(target=recv_image, args=(robot.conn,))
-        thread_recv.start()
+        thread_recv_image = threading.Thread(target=recv_image, args=(robot.conn,))
+        thread_recv_image.start()
 
         ### send streaming
-        robot.detection()
+        thread_detection = threading.Thread(target=robot.detection, args=(robot,))
+        thread_detection.start()
 
         ### wait till the receive thread to end
-        thread_recv.join()
+        thread_detection.join()
+        thread_recv_image.join()
 
     except KeyboardInterrupt:
         pass
