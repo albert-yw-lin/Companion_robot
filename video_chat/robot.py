@@ -67,7 +67,7 @@ class Robot:
             self.face_center.data = [box.xmin+0.5*box.width, box.ymin+0.5*box.height] # the Float64MultiArray data field is a list not tuple
             rospy.loginfo(self.face_center)
             self.face_center_pub.publish(self.face_center)
-            self.rate.sleep()
+            # self.rate.sleep()
 
         ### Flip the image horizontally for a selfie-view display.
         image = cv2.flip(image, 1)
@@ -88,7 +88,7 @@ class Robot:
             self.pose.data = struct.unpack('!4f', data)
             rospy.loginfo(self.pose)
             self.pose_pub.publish(self.pose)
-            self.rate.sleep()
+            # self.rate.sleep()
 
     def detection(self):
         with self.mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.5) as face:
@@ -103,8 +103,9 @@ class Robot:
                     self.is_first_detection = False
                 else: 
                     self.thread_face_center.join()
-                self.thread_face_center = threading.Thread(target=self.face_center, args = (image,))
+                self.thread_face_center = threading.Thread(target=self.face_center, args = (image, face))
                 self.thread_face_center.start()
+                # self.face_center(image)
             
 ############
 ### main ###
@@ -114,12 +115,7 @@ if __name__ == '__main__':
         ### setup
         robot = Robot()
 
-        ### send streaming
-        # thread_detection = threading.Thread(target=robot.detection)
-        # thread_detection.start()
-        # time.sleep(2)
-
-        thread_pose = threading.Thread(target=robot.recv_pose, args=(robot.conn,))
+        thread_pose = threading.Thread(target=robot.recv_pose, args=(robot.conn_pose,))
         thread_pose.start()
 
         ### set another thread to recceive streaming

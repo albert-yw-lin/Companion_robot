@@ -161,6 +161,8 @@ class Laptop:
                 self.thread_pose = threading.Thread(target=self.pose, args = (image, pose))
                 self.thread_face_crop.start()
                 self.thread_pose.start()
+                # self.face_crop(image, face)
+                # self.pose(image, pose)
 
 
 
@@ -173,11 +175,6 @@ if __name__ == '__main__':
     try:
         ### setup
         laptop = Laptop()
-
-        ### send streaming
-        # thread_detection = threading.Thread(target=laptop.detection)
-        # thread_detection.start()
-        # time.sleep(2)
 
         ### set another thread to recceive streaming
         thread_recv_image = threading.Thread(target=recv_image, args=(laptop.client,))
