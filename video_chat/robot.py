@@ -17,8 +17,6 @@ class Robot:
 
         ### webcam setup
         self.cap = cv2.VideoCapture(gstreamer_pipeline(), cv2.CAP_GSTREAMER)
-        # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
-        # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
 
         ### socket setup
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,85 +34,77 @@ class Robot:
         print("Waiting for client_pose to connect ...")
         self.conn_pose, self.addr_pose = self.server_pose.accept()
         print("Connected to client_pose "+str(self.addr_pose))
-        
-        ### fps setup
-        # self.fps = Fps()
 
         ### setup ROS message and node
-        # self.face_center = Float64MultiArray()
-        # self.pose = Float64MultiArray()
-        # self.face_center_pub = rospy.Publisher('face_center', Float64MultiArray, queue_size=10)
-        # self.pose_pub = rospy.Publisher('pose', Float64MultiArray, queue_size=10)
-        # rospy.init_node('camera', anonymous=True)
+        self.face_center = Float64MultiArray()
+        self.pose = Float64MultiArray()
+        self.face_center_pub = rospy.Publisher('face_center', Float64MultiArray, queue_size=10)
+        self.pose_pub = rospy.Publisher('pose', Float64MultiArray, queue_size=10)
+        rospy.init_node('camera', anonymous=True)
         # self.rate = rospy.Rate(30) # 30Hz
 
         self.is_first_send = True
+        self.is_first_detection = True
 
-    def face_position(self, results):
-        ### only select the first face
-        detection = results.detections[0]
+    def face_center(self, image):
+        with self.mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.5) as face:
+            ### To improve performance, optionally mark the image as not writeable to
+            ### pass by reference.
+            image.flags.writeable = False
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            ### get results from face detection and pose
+            results = face.process(image)
+            ### turn the image into writable and BGR mode
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-        ### example solution
-        # mp_drawing.draw_detection(image, detection)
+            if results.detections:
+                ### only select the first face
+                detection = results.detections[0]
+                ### example solution
+                # mp_drawing.draw_detection(image, detection)
+                box = detection.location_data.relative_bounding_box
+                ### face position calculation, and assign to ROS message
+                self.face_center.data = [box.xmin+0.5*box.width, box.ymin+0.5*box.height] # the Float64MultiArray data field is a list not tuple
+                rospy.loginfo(self.face_center)
+                self.face_center_pub.publish(self.face_center)
 
-        box = detection.location_data.relative_bounding_box
-        return [box.xmin+0.5*box.width, box.ymin+0.5*box.height] # the Float64MultiArray data field is a list not tuple
+            ### Flip the image horizontally for a selfie-view display.
+            image = cv2.flip(image, 1)
+            ### sending images through socket
+            if(self.is_first_send):
+                self.is_first_send = False
+            else: self.thread_send_image.join()
+            self.thread_send_image =threading.Thread(target=send_image, args=(self.conn, image))
+            self.thread_send_image.start()   
+
+    def recv_pose(self, socket):
+        while True:
+            ### 32 means 32 byte. ASSUME one floating points is 64bit (8 bytes) in python. 4*8=32
+            data = socket.recv(16)
+            ### close server and client simultaneously
+            if not data: break
+
+            self.pose.data = struct.unpack('!4f', data)
+            rospy.loginfo(self.pose)
+            self.pose_pub.publish(self.pose)
 
     def detection(self):
-        with self.mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.5) as face:
-            while self.cap.isOpened() and (not rospy.is_shutdown()):
-                success, image = self.cap.read()
-                if not success:
-                    print("Ignoring empty camera frame.")
-                    ### If loading a video, use 'break' instead of 'continue'.
-                    continue
-                
-                ########################
-                ### image processing ###
-                ########################
 
-                ### To improve performance, optionally mark the image as not writeable to
-                ### pass by reference.
-                image.flags.writeable = False
-                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        while self.cap.isOpened() and (not rospy.is_shutdown()):
+            success, image = self.cap.read()
+            if not success:
+                print("Ignoring empty camera frame.")
+                ### If loading a video, use 'break' instead of 'continue'.
+                continue
 
-                ### get results from face detection and pose
-                results = face.process(image)
-
-                ### turn the image into writable and BGR mode
-                image.flags.writeable = True
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
-                ### face position calculation, and assign to ROS message
-                # if results.detections: self.face_center.data = self.face_position(results)
-
-                ### Flip the image horizontally for a selfie-view display.
-                image = cv2.flip(image, 1)
-                                
-                ### draw fps onto the image
-                # image = self.fps.calc_draw_fps(image)
-
-                ###################################
-                ### sending and publishing data ###
-                ###################################
-                
-                ### sending images through socket
-                # send_image(self.conn, image)
-                if(self.is_first_send):
-                    self.is_first_send = False
-                else: self.thread_send_image.join()
-                self.thread_send_image =threading.Thread(target=send_image, args=(self.conn, image))
-                self.thread_send_image.start()   
-
-                ### receiving pose array (tuple)
-                pose = recv_pose(self.conn_pose)
-                # self.pose.data = recv_pose(self.conn_pose)
-                # rospy.loginfo(self.pose)
-                # rospy.loginfo(self.face_center)
-                # self.pose_pub.publish(self.pose)
-                # self.face_center_pub.publish(self.face_center)
-                # self.rate.sleep()                   
-
+            if(self.is_first_detection):
+                self.is_first_detection = False
+            else: 
+                self.thread_face_center.join()
+            self.thread_face_center = threading.Thread(target=self.face_center, args = (image,))
+            self.thread_face_center.start()
+            
 ############
 ### main ###
 ############
@@ -127,6 +117,9 @@ if __name__ == '__main__':
         thread_recv_image = threading.Thread(target=recv_image, args=(robot.conn,))
         thread_recv_image.start()
 
+        thread_pose = threading.Thread(target=robot.recv_pose, args=(robot.conn,))
+        thread_pose.start()
+
         ### send streaming
         thread_detection = threading.Thread(target=robot.detection)
         thread_detection.start()
@@ -134,6 +127,7 @@ if __name__ == '__main__':
         ### wait till the receive thread to end
         thread_detection.join()
         thread_recv_image.join()
+        thread_pose.join()
 
     except KeyboardInterrupt:
         pass

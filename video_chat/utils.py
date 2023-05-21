@@ -58,17 +58,6 @@ def recv_image(socket):
     except OSError:
         pass
 
-def send_pose(socket, pose):
-    ### pose: can be a list or tuple contains FOUR floating points
-    data = struct.pack('!4f', *pose)
-    socket.sendall(data)
-
-def recv_pose(socket):
-    ### 32 means 32 byte. ASSUME one floating points is 64bit (8 bytes) in python. 4*8=32
-    data = socket.recv(16)
-    pose = struct.unpack('!4f', data)
-    return pose
-
 def gstreamer_pipeline(
     sensor_id=0,
     capture_width=1640,

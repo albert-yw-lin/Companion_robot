@@ -31,9 +31,6 @@ class Laptop:
         self.ymin_prev = 0
         self.width_prev = 0
         self.height_prev = 0
-        
-        # fps setup
-        # self.fps = Fps()
 
         self.is_first_send_image = True
         self.is_first_detection = True
@@ -140,7 +137,9 @@ class Laptop:
                 self.arm_state = (shoulder_angle_L, arm_angle_L, shoulder_angle_R, arm_angle_R)
 
             ### send socket
-            send_pose(self.client_pose, self.arm_state)
+            ### pose: can be a list or tuple contains FOUR floating points
+            data = struct.pack('!4f', *self.arm_state)
+            socket.sendall(data)
 
     def detection(self):
         while self.cap.isOpened():
@@ -157,8 +156,8 @@ class Laptop:
                 self.thread_face_crop.join()
                 self.thread_pose.join()
 
-            self.thread_face_crop = threading.Thread(target=self.face_crop, args = (self.client, image))
-            self.thread_pose = threading.Thread(target=self.pose, args = (self.client, image))
+            self.thread_face_crop = threading.Thread(target=self.face_crop, args = (image,))
+            self.thread_pose = threading.Thread(target=self.pose, args = (image,))
             self.thread_face_crop.start()
             self.thread_pose.start()
 
