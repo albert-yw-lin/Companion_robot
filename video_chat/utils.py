@@ -55,6 +55,8 @@ def recv_image(socket):
                 cv2.waitKey(1)
     except ConnectionResetError:
         pass
+    except OSError:
+        pass
 
 def send_pose(socket, pose):
     ### pose: can be a list or tuple contains FOUR floating points
