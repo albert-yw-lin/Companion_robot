@@ -101,12 +101,12 @@ class Robot:
                 send_image(self.conn, image)   
 
                 ### receiving pose array (tuple)
-                self.pose.data = recv_pose(self.conn_pose)
-                rospy.loginfo(self.pose)
-                rospy.loginfo(self.face_center)
-                self.pose_pub.publish(self.pose)
-                self.face_center_pub.publish(self.face_center)
-                self.rate.sleep()
+                # self.pose.data = recv_pose(self.conn_pose)
+                # rospy.loginfo(self.pose)
+                # rospy.loginfo(self.face_center)
+                # self.pose_pub.publish(self.pose)
+                # self.face_center_pub.publish(self.face_center)
+                # self.rate.sleep()
 
 
                             
