@@ -140,7 +140,7 @@ class Laptop:
 
                 ### get results from face detection and pose
                 results_face = face.process(image)
-                results_pose = pose.process(image)
+                # results_pose = pose.process(image)
 
                 ### turn the image into writable and BGR mode
                 image.flags.writeable = True
@@ -148,7 +148,7 @@ class Laptop:
 
                 ### post processing and calculation
                 if results_face.detections: image = self.face_crop(image, results_face)
-                if results_pose.pose_landmarks: arm_state = self.arm_calc(results_pose)
+                # if results_pose.pose_landmarks: arm_state = self.arm_calc(results_pose)
                 
                 image = self.post_process(image)
                 

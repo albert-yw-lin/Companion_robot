@@ -29,12 +29,12 @@ class Robot:
         print("Connected to client "+str(self.addr))
 
         ### socket for pose calculation setup
-        self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_pose.bind(ADDR_POSE)
-        self.server_pose.listen(1)
-        print("Waiting for client_pose to connect ...")
-        self.conn_pose, self.addr_pose = self.server_pose.accept()
-        print("Connected to client_pose "+str(self.addr_pose))
+        # self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # self.server_pose.bind(ADDR_POSE)
+        # self.server_pose.listen(1)
+        # print("Waiting for client_pose to connect ...")
+        # self.conn_pose, self.addr_pose = self.server_pose.accept()
+        # print("Connected to client_pose "+str(self.addr_pose))
         
         ### fps setup
         # self.fps = Fps()
@@ -78,7 +78,7 @@ class Robot:
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
                 ### get results from face detection and pose
-                results = face.process(image)
+                # results = face.process(image)
 
                 ### turn the image into writable and BGR mode
                 image.flags.writeable = True
