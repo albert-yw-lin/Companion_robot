@@ -25,7 +25,7 @@ class Robot:
         print("Waiting for client to connect ...")
         self.conn, self.addr = self.server.accept()
         print("Connected to client "+str(self.addr))
-        time.sleep(1)
+        time.sleep(2)
 
         ### socket for pose calculation setup
         self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -41,7 +41,7 @@ class Robot:
         self.face_center_pub = rospy.Publisher('face_center', Float64MultiArray, queue_size=10)
         self.pose_pub = rospy.Publisher('pose', UInt8MultiArray, queue_size=10)
         rospy.init_node('camera', anonymous=True)
-        self.rate = rospy.Rate(30) # 30Hz
+        self.rate = rospy.Rate(24)
 
         self.is_first_send = True
         self.is_first_detection = True
