@@ -151,18 +151,18 @@ class Laptop:
                     continue
 
                 ### start multi-thread
-                # if(self.is_first_detection):
-                #     self.is_first_detection = False
-                # else: 
-                #     self.thread_face_crop.join()
-                #     self.thread_pose.join()
+                if(self.is_first_detection):
+                    self.is_first_detection = False
+                else: 
+                    self.thread_face_crop.join()
+                    self.thread_pose.join()
 
-                # self.thread_face_crop = threading.Thread(target=self.face_crop, args = (image, face))
-                # self.thread_pose = threading.Thread(target=self.pose, args = (image, pose))
-                # self.thread_face_crop.start()
-                # self.thread_pose.start()
-                self.face_crop(image, face)
-                self.pose(image, pose)
+                self.thread_face_crop = threading.Thread(target=self.face_crop, args = (image, face))
+                self.thread_pose = threading.Thread(target=self.pose, args = (image, pose))
+                self.thread_face_crop.start()
+                self.thread_pose.start()
+                # self.face_crop(image, face)
+                # self.pose(image, pose)
 
 
 
@@ -184,7 +184,6 @@ if __name__ == '__main__':
         laptop.detection()
 
         ### wait till the receive thread to end
-        # thread_detection.join()
         thread_recv_image.join()
     
     except KeyboardInterrupt:

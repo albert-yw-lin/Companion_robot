@@ -99,13 +99,13 @@ class Robot:
                     ### If loading a video, use 'break' instead of 'continue'.
                     continue
 
-                # if(self.is_first_detection):
-                #     self.is_first_detection = False
-                # else: 
-                #     self.thread_face_center.join()
-                # self.thread_face_center = threading.Thread(target=self.face_center, args = (image, face))
-                # self.thread_face_center.start()
-                self.face_center(image)
+                if(self.is_first_detection):
+                    self.is_first_detection = False
+                else: 
+                    self.thread_face_center.join()
+                self.thread_face_center = threading.Thread(target=self.face_center, args = (image, face))
+                self.thread_face_center.start()
+                # self.face_center(image)
             
 ############
 ### main ###
