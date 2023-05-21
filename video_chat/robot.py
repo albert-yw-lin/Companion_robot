@@ -60,9 +60,7 @@ class Robot:
         return [box.xmin+0.5*box.width, box.ymin+0.5*box.height] # the Float64MultiArray data field is a list not tuple
 
     def detection(self):
-        with self.mp_face.FaceDetection(
-            model_selection=0, min_detection_confidence=0.5) as face:
-
+        with self.mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.5) as face:
             while self.cap.isOpened() and (not rospy.is_shutdown()):
                 success, image = self.cap.read()
                 if not success:
@@ -87,7 +85,7 @@ class Robot:
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
                 ### face position calculation, and assign to ROS message
-                if results.detections: self.face_center.data = self.face_position(results)
+                # if results.detections: self.face_center.data = self.face_position(results)
 
                 ### Flip the image horizontally for a selfie-view display.
                 image = cv2.flip(image, 1)
@@ -144,6 +142,6 @@ if __name__ == '__main__':
         robot.cap.release()
         cv2.destroyAllWindows()
         robot.conn.close()
-        # robot.conn_pose.close()
+        robot.conn_pose.close()
         robot.server.close()
         print("Closing the program ...")

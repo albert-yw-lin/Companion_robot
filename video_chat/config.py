@@ -15,7 +15,7 @@ ADDR_POSE = (SERVER, PORT_POSE)
 # face detection
 SMOOTH = 0.2 # 1 for no smooth
 FOREHEAD = 0.5 # porprotion with respect to bounding box
-EXPAND = 0.1 # porprotion with respect to bounding box
+EXPAND = 0.15 # porprotion with respect to bounding box
 VIDEO_HEIGHT = 480
 VIDEO_WIDTH = 640
 FRAME_RATE = 30

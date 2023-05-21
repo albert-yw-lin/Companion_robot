@@ -196,6 +196,6 @@ if __name__ == '__main__':
         ### close cap
         laptop.cap.release()
         laptop.client.close()
-        # laptop.client_pose.close()
+        laptop.client_pose.close()
         cv2.destroyAllWindows()
         print("Closing the program ...")
