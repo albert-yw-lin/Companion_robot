@@ -12,11 +12,11 @@ class Laptop:
         # mediapipe setup
         self.mp_face = mp.solutions.face_detection
         self.mp_pose = mp.solutions.pose
-        self.shoulder_angle_L = SHOULDER_INIT
-        self.arm_angle_L = ARM_INIT
-        self.shoulder_angle_R = SHOULDER_INIT
-        self.arm_angle_R = ARM_INIT
-        self.arm_state = (-self.shoulder_angle_L+90, self.arm_angle_L, -self.shoulder_angle_R+90, self.arm_angle_R)
+        self.shoulder_angle_L = 0
+        self.arm_angle_L = 0
+        self.shoulder_angle_R = 0
+        self.arm_angle_R = 0
+        self.arm_state = (self.shoulder_angle_L, self.arm_angle_L, self.shoulder_angle_R, self.arm_angle_R)
 
         # webcam setup
         self.cap = cv2.VideoCapture(CAMERA_ID)
@@ -136,22 +136,32 @@ class Laptop:
             arm_angle_L_conf = landmark[15].visibility>=POSE_CONF and landmark[13].visibility>=POSE_CONF and landmark[11].visibility>=POSE_CONF
             shoulder_angle_R_conf = landmark[14].visibility>=POSE_CONF and landmark[12].visibility>=POSE_CONF and landmark[11].visibility>=POSE_CONF
             arm_angle_R_conf = landmark[16].visibility>=POSE_CONF and landmark[14].visibility>=POSE_CONF and landmark[12].visibility>=POSE_CONF
-            
-            ### angle calculation
-            if(shoulder_angle_L_conf):self.shoulder_angle_L = math.acos((shoulder_L@arm_L)/(np.linalg.norm(shoulder_L)*np.linalg.norm(arm_L)))*180/np.pi
-            else:self.shoulder_angle_L = SHOULDER_INIT
-            if(arm_angle_L_conf):self.arm_angle_L = math.acos((forearm_L@arm_L)/(np.linalg.norm(forearm_L)*np.linalg.norm(arm_L)))*180/np.pi
-            else: self.arm_angle_L = ARM_INIT
-            if(shoulder_angle_R_conf):self.shoulder_angle_R = math.acos((shoulder_R@arm_R)/(np.linalg.norm(shoulder_R)*np.linalg.norm(arm_R)))*180/np.pi
-            else: self.shoulder_angle_R = SHOULDER_INIT
-            if(arm_angle_R_conf):self.arm_angle_R = math.acos((forearm_R@arm_R)/(np.linalg.norm(forearm_R)*np.linalg.norm(arm_R)))*180/np.pi
-            else: self.arm_angle_R = ARM_INIT
 
-            self.arm_state = (-self.shoulder_angle_L+90, self.arm_angle_L, -self.shoulder_angle_R+90, self.arm_angle_R)
+            ### angle calculation
+            if(shoulder_angle_L_conf):
+                self.shoulder_angle_L = np.clip(int(-math.acos((shoulder_L@arm_L)/(np.linalg.norm(shoulder_L)*np.linalg.norm(arm_L)))*180/np.pi+90), SHOULDER_MIN, SHOULDER_MAX)
+            else:
+                self.shoulder_angle_L = 0
+            if(arm_angle_L_conf):
+                self.arm_angle_L = np.clip(int(math.acos((forearm_L@arm_L)/(np.linalg.norm(forearm_L)*np.linalg.norm(arm_L)))*180/np.pi), ARM_MIN, ARM_MAX)
+            else: 
+                self.arm_angle_L = 0
+            if(shoulder_angle_R_conf):
+                self.shoulder_angle_R = np.clip(int(-math.acos((shoulder_R@arm_R)/(np.linalg.norm(shoulder_R)*np.linalg.norm(arm_R)))*180/np.pi+90), SHOULDER_MIN, SHOULDER_MAX)
+            else: 
+                self.shoulder_angle_R = 0
+            if(arm_angle_R_conf):
+                self.arm_angle_R = np.clip(int(math.acos((forearm_R@arm_R)/(np.linalg.norm(forearm_R)*np.linalg.norm(arm_R)))*180/np.pi), ARM_MIN, ARM_MAX)
+            else: 
+                self.arm_angle_R = 0
+            
+            # print("shoulder_L: ", int(-self.shoulder_angle_L+90), "\tarm_L: ", int(self.arm_angle_L), "\n", "shoulder_R: ", int(-self.shoulder_angle_R+90), "\tarm_R: ", int(self.arm_angle_R))
+
+            self.arm_state = (self.shoulder_angle_L, self.arm_angle_L, self.shoulder_angle_R, self.arm_angle_R)
 
         ### send socket
         ### pose: can be a list or tuple contains FOUR floating points
-        data = struct.pack('!4f', *self.arm_state)
+        data = struct.pack('!4B', *self.arm_state) #!4B: four Uint8
         self.client_pose.sendall(data)
 
     def detection(self):

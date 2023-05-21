@@ -6,7 +6,7 @@ from utils import *
 from config import *
 
 import rospy
-from std_msgs.msg import Float64MultiArray
+from std_msgs.msg import Float64MultiArray, UInt8MultiArray
 
 class Robot:
 
@@ -37,11 +37,11 @@ class Robot:
 
         ### setup ROS message and node
         self.face_center = Float64MultiArray()
-        self.pose = Float64MultiArray()
+        self.pose = UInt8MultiArray()
         self.face_center_pub = rospy.Publisher('face_center', Float64MultiArray, queue_size=10)
-        self.pose_pub = rospy.Publisher('pose', Float64MultiArray, queue_size=10)
+        self.pose_pub = rospy.Publisher('pose', UInt8MultiArray, queue_size=10)
         rospy.init_node('camera', anonymous=True)
-        self.rate = rospy.Rate(10) # 30Hz
+        self.rate = rospy.Rate(30) # 30Hz
 
         self.is_first_send = True
         self.is_first_detection = True
@@ -84,12 +84,11 @@ class Robot:
 
     def recv_pose(self, socket):
         while True:
-            ### 32 means 32 byte. ASSUME one floating points is 64bit (8 bytes) in python. 4*8=32
-            data = socket.recv(16)
+            data = socket.recv(4) # 4 bytes means four Uint8
             ### close server and client simultaneously
             if not data: break
 
-            self.pose.data = struct.unpack('!4f', data)
+            self.pose.data = struct.unpack('!4B', data) #!4B: four Uint8
             rospy.loginfo(self.pose)
             self.pose_pub.publish(self.pose)
             self.rate.sleep()

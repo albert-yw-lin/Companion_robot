@@ -64,7 +64,7 @@ with mp_pose.Pose(
       shoulder_angle_R = math.acos((shoulder_R@arm_R)/(np.linalg.norm(shoulder_R)*np.linalg.norm(arm_R)))*180/np.pi
       arm_angle_R = math.acos((forearm_R@arm_R)/(np.linalg.norm(forearm_R)*np.linalg.norm(arm_R)))*180/np.pi
 
-      print("shoulder_L: ", -shoulder_angle_L+90, "\tarm_L: ", arm_angle_L, "\n", "shoulder_R: ", -shoulder_angle_R+90, "\tarm_R: ", arm_angle_R)
+      print("shoulder_L: ", int(-shoulder_angle_L+90), "\tarm_L: ", int(arm_angle_L), "\n", "shoulder_R: ", int(-shoulder_angle_R+90), "\tarm_R: ", int(arm_angle_R))
 
     # Flip the image horizontally for a selfie-view display.
     image = cv2.flip(image, 1)
