@@ -80,14 +80,14 @@ class Robot:
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
                 ### get results from face detection and pose
-                # results = face.process(image)
+                results = face.process(image)
 
                 ### turn the image into writable and BGR mode
                 image.flags.writeable = True
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
                 ### face position calculation, and assign to ROS message
-                # if results.detections: self.face_center.data = self.face_position(results)
+                if results.detections: self.face_center.data = self.face_position(results)
 
                 ### Flip the image horizontally for a selfie-view display.
                 image = cv2.flip(image, 1)
