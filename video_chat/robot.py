@@ -65,7 +65,7 @@ class Robot:
             box = detection.location_data.relative_bounding_box
             ### face position calculation, and assign to ROS message
             self.face_center.data = [box.xmin+0.5*box.width, box.ymin+0.5*box.height] # the Float64MultiArray data field is a list not tuple
-            rospy.loginfo(self.face_center)
+            # rospy.loginfo(self.face_center)
             self.face_center_pub.publish(self.face_center)
             # self.rate.sleep()
 
