@@ -44,8 +44,7 @@ class Robot:
         self.pose = Float64MultiArray()
         self.face_center_pub = rospy.Publisher('face_center', Float64MultiArray, queue_size=10)
         self.pose_pub = rospy.Publisher('pose', Float64MultiArray, queue_size=10)
-        rospy.init_node('face_center', anonymous=True)
-        rospy.init_node('pose', anonymous=True)
+        rospy.init_node('camera', anonymous=True)
         self.rate = rospy.Rate(30) # 30Hz
 
     def face_position(self, results):
