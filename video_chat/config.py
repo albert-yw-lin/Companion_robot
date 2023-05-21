@@ -4,7 +4,7 @@ import cv2
 # socket
 HEADER = 64
 PORT = 9999
-PORT_POSE = 9998
+PORT_POSE = 5000
 # SERVER = "192.168.0.205" # in lab
 # SERVER = "192.168.0.11" # at home, ethernet
 SERVER = "192.168.0.13" # at home, wifi
