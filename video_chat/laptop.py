@@ -175,16 +175,20 @@ if __name__ == '__main__':
         laptop = Laptop()
 
         ### send streaming
-        thread_detection = threading.Thread(target=laptop.detection)
-        thread_detection.start()
-        time.sleep(2)
+        # thread_detection = threading.Thread(target=laptop.detection)
+        # thread_detection.start()
+        # time.sleep(2)
+        laptop.detection()
 
         ### set another thread to recceive streaming
         thread_recv_image = threading.Thread(target=recv_image, args=(laptop.client,))
         thread_recv_image.start()
 
+        ### send streaming
+        laptop.detection()
+
         ### wait till the receive thread to end
-        thread_detection.join()
+        # thread_detection.join()
         thread_recv_image.join()
     
     except KeyboardInterrupt:
