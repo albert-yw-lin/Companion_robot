@@ -25,6 +25,7 @@ def send_image(socket, image):
     encode_image = cv2.imencode('.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), JPEG_QUALITY])[1].tobytes()
     # encode_image = cv2.imencode('.jpg', np.zeros((480,640,3)).astype(np.uint8))[1].tobytes()
     ### tell the server(robot) how much data should it receive
+    print(socket.fileno())
     if(socket.fileno()!=-1):socket.sendall(len(encode_image).to_bytes(4, byteorder='big'))
     else:return
 
