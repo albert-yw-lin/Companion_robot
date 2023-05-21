@@ -179,7 +179,7 @@ if __name__ == '__main__':
         thread_recv_image.start()
 
         ### send streaming
-        thread_detection = threading.Thread(target=laptop.detection, args=(laptop,))
+        thread_detection = threading.Thread(target=laptop.detection)
         thread_detection.start()
 
         ### wait till the receive thread to end
