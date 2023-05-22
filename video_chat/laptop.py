@@ -37,10 +37,10 @@ class Laptop:
 
         # socket setup
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect(ADDR)
-        time.sleep(3)
-        self.client_pose.connect(ADDR_POSE)
+        # time.sleep(3)
+        # self.client_pose.connect(ADDR_POSE)
 
     def send_face_crop(self, image, face):
         ### To improve performance, optionally mark the image as not writeable to
@@ -181,12 +181,12 @@ class Laptop:
                     self.is_first_detection = False
                 else: 
                     self.thread_send_face_crop.join()
-                    self.thread_send_pose.join()
+                    # self.thread_send_pose.join()
 
                 self.thread_send_face_crop = threading.Thread(target=self.send_face_crop, args = (image, face))
-                self.thread_send_pose = threading.Thread(target=self.send_pose, args = (image, pose))
+                # self.thread_send_pose = threading.Thread(target=self.send_pose, args = (image, pose))
                 self.thread_send_face_crop.start()
-                self.thread_send_pose.start()
+                # self.thread_send_pose.start()
 
 
 
