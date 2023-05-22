@@ -10,11 +10,11 @@
 
 int main(){
     unsigned char id = 1;
-    unsigned char time = 4;
+    unsigned char time = 10;
     unsigned int pos = 400;
     unsigned int now_pos;
     unsigned char reset_time = 255;
-    
+    /*
     A1_16_Ini();
     SetPositionI_JOG(id,reset_time,pos);
     std::this_thread::sleep_for(std::chrono::milliseconds(2550));
@@ -26,6 +26,12 @@ int main(){
         // std::cout <<"now position:" << now_pos << std::endl;
     }
     // SetPositionI_JOG(id,time,pos);
+    */
+   A1_16_Ini();
+   while(true){
+        now_pos = ReadPosition(id);
+        std::cout <<"now position:" << now_pos << std::endl;
+   }
     uart_close();
     return 0;
 }
