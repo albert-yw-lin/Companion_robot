@@ -88,7 +88,7 @@ class Robot:
             if (not data): break
 
             self.pose.data = struct.unpack('!4B', data) #!4B: four Uint8
-            rospy.loginfo(self.pose)
+            # rospy.loginfo(self.pose)
             self.pose_pub.publish(self.pose)
             self.rate.sleep()
 
