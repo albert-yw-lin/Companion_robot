@@ -43,6 +43,9 @@ class Head_arm:
         elif self.motor_pos[ID_HEAD_X] <= POS_LIMIT[ID_HEAD_X][0] + TURN_THRESHOLD:
             self.turn_base.data = TURN_LEFT
             self.turn_base_pub.publish(self.turn_base)
+        else:
+            self.turn_base.data = TURN_STOP
+            self.turn_base_pub.publish(self.turn_base)
 
     def pose_callback(self, pose):
         # rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)

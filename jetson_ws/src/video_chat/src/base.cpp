@@ -10,7 +10,7 @@
 
 int pos = 512; //0-1023
 int step = 30;
-unsigned char wait_time = 100;
+unsigned char wait_time = 255;
 unsigned char id = 1;
 
 
@@ -25,6 +25,9 @@ void base_callback(const std_msgs::UInt8::ConstPtr& cmd){
         //turn right
         pos += step;
         SetPositionI_JOG(id,wait_time,pos);
+        std::this_thread::sleep_for(std::chrono::milliseconds(wait_time*10));
+    }
+    else{
         std::this_thread::sleep_for(std::chrono::milliseconds(wait_time*10));
     }
 }
