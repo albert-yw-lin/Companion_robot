@@ -27,10 +27,10 @@ class Head_arm:
         if(error_y>=0):add_motor_head_y = int(error_y*(48.8/360)*4095*P_GAIN_Y_DOWN)
         else:add_motor_head_y = int(error_y*(48.8/360)*4095*P_GAIN_Y_UP)
 
-        self.motor_head_pos = self.motor.sync_read_pos()
-        self.motor_head_pos[ID_HEAD_X] += add_motor_head_x
-        self.motor_head_pos[ID_HEAD_Y] += add_motor_head_y
-        self.motor_head.sync_write_pos(self.motor_head_pos)
+        motor_present_pos = self.motor.sync_read_pos()
+        self.motor_pos[ID_HEAD_X] = motor_present_pos[ID_HEAD_X] + add_motor_head_x
+        self.motor_pos[ID_HEAD_Y] = motor_present_pos[ID_HEAD_Y] + add_motor_head_y
+        self.motor.sync_write_pos(self.motor_pos)
 
     def pose_callback(self, pose):
         # rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
@@ -61,8 +61,7 @@ if __name__ == '__main__':
 
     finally:
         rospy.signal_shutdown('Shutting down head_arm')
-        head_arm.motor_head.close()
-        head_arm.motor_arm.close()
+        head_arm.motor.close()
         print("####################################\n", \
               "### Closing Head_arm normally ...###\n", \
               "####################################")
