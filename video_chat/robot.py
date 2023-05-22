@@ -49,6 +49,8 @@ class Robot:
         self.face_center_x = 0
         self.face_center_y = 0
 
+        self.is_system_shutdown = False
+
     def send_face_center(self, image, face):
         ### To improve performance, optionally mark the image as not writeable to
         ### pass by reference.
@@ -86,7 +88,7 @@ class Robot:
         while True:
             data = socket.recv(4) # 4 bytes means four Uint8
             ### close server and client simultaneously
-            if not data: break
+            if not data or self.is_system_shutdown : break
 
             self.pose.data = struct.unpack('!4B', data) #!4B: four Uint8
             rospy.loginfo(self.pose)
@@ -95,7 +97,7 @@ class Robot:
 
     def detection(self):
         with self.mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.5) as face:
-            while self.cap.isOpened() and (not rospy.is_shutdown()):
+            while self.cap.isOpened() and (not rospy.is_shutdown()) and (not self.is_system_shutdown):
                 success, image = self.cap.read()
                 if not success:
                     print("Ignoring empty camera frame.")
@@ -122,7 +124,7 @@ if __name__ == '__main__':
         thread_pose.start()
 
         ### set another thread to recceive streaming
-        thread_recv_image = threading.Thread(target=recv_image, args=(robot.conn,))
+        thread_recv_image = threading.Thread(target=recv_image, args=(robot.conn, robot.is_system_shutdown))
         thread_recv_image.start()
 
         ### send streaming
@@ -132,16 +134,24 @@ if __name__ == '__main__':
         thread_recv_image.join()
         thread_pose.join()
 
-    except KeyboardInterrupt:
-        pass
+    # except KeyboardInterrupt:
+    #     pass
     
-    except rospy.ROSInterruptException:
-        pass
+    # except rospy.ROSInterruptException:
+    #     pass
+
+    except Exception as error_code:
+        print(error_code)
 
     finally:
+        robot.is_system_shutdown = True
+        print("Wait for the system shutown ...")
+        time.sleep(3)
+
         robot.cap.release()
         cv2.destroyAllWindows()
         robot.conn.close()
         robot.conn_pose.close()
         robot.server.close()
+        robot.server_pose.close()
         print("Closing the program ...")

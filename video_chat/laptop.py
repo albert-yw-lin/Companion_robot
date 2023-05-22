@@ -40,6 +40,8 @@ class Laptop:
         self.is_first_send_image = True
         self.is_first_detection = True
 
+        self.is_system_shutdown = False
+
     def send_face_crop(self, image, face):
         ### To improve performance, optionally mark the image as not writeable to
         ### pass by reference.
@@ -167,7 +169,7 @@ class Laptop:
     def detection(self):
         with self.mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.5) as face, \
              self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
-            while self.cap.isOpened():
+            while self.cap.isOpened() and (not self.is_system_shutdown):
                 success, image = self.cap.read()
                 if not success:
                     print("Ignoring empty camera frame.")
@@ -199,7 +201,7 @@ if __name__ == '__main__':
         laptop = Laptop()
 
         ### set another thread to recceive streaming
-        thread_recv_image = threading.Thread(target=recv_image, args=(laptop.client,))
+        thread_recv_image = threading.Thread(target=recv_image, args=(laptop.client, laptop.is_system_shutdown))
         thread_recv_image.start()
 
         ### send streaming
@@ -208,10 +210,18 @@ if __name__ == '__main__':
         ### wait till the receive thread to end
         thread_recv_image.join()
     
-    except KeyboardInterrupt:
-        print("KeyboardInterrupt.")
+    # except KeyboardInterrupt:
+    #     print("KeyboardInterrupt.")
+
+    except Exception as error_code:
+        print(error_code)
     
     finally:
+        laptop.is_system_shutdown = True
+        print("Wait for the system shutown ...")
+        time.sleep(3)
+
+
         ### close cap
         laptop.cap.release()
         laptop.client.close()

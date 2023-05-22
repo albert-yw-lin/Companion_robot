@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ### DO NOT MODIFY THIS SECTION
 MY_DXL = 'X_SERIES'
 PROTOCOL_VERSION            = 2.0
