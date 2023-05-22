@@ -210,8 +210,8 @@ if __name__ == '__main__':
         ### wait till the receive thread to end
         thread_recv_image.join()
     
-    # except KeyboardInterrupt:
-    #     print("KeyboardInterrupt.")
+    except KeyboardInterrupt:
+        pass
 
     except Exception as error_code:
         print(error_code)

@@ -47,10 +47,8 @@ if __name__ == '__main__':
         head_arm = Head_arm()
         rospy.spin()
 
-    # except KeyboardInterrupt:
-    #     pass
-    # except rospy.ROSInterruptException:
-    #     pass
+    except KeyboardInterrupt:
+        pass
 
     except rospy.ROSInterruptException:
         pass

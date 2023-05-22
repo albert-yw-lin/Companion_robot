@@ -131,8 +131,8 @@ if __name__ == '__main__':
         thread_recv_image.join()
         thread_pose.join()
 
-    # except KeyboardInterrupt:
-    #     pass
+    except KeyboardInterrupt:
+        pass
     
     except rospy.ROSInterruptException:
         pass
