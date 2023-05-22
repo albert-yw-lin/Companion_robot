@@ -54,7 +54,7 @@ ID_ARM_R = 3
 
 ### motor face tracking
 FACE_CENTER_X = 0.5
-FACE_CENTER_Y = 0.7
+FACE_CENTER_Y = 0.6
 P_GAIN_X = 0.25
 P_GAIN_Y_UP = 0.6
 P_GAIN_Y_DOWN = 0.1
