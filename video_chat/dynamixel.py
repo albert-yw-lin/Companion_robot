@@ -114,10 +114,10 @@ class Dynamixel:
         positions = [] # list of present positions
         dxl_comm_result = self.groupSyncRead.txRxPacket()
         self.check_txrx(dxl_comm_result)
-        for id in self.ids:
-            dxl_getdata_result = self.groupSyncRead.isAvailable(id, ADDR_PRESENT_POSITION, LEN_PRESENT_POSITION)
-            self.check_groupSync(id, dxl_getdata_result, mode='r')
-            positions.append(self.groupSyncRead.getData(id, ADDR_PRESENT_POSITION, LEN_PRESENT_POSITION))
+        for index in range(len(self.ids)):
+            dxl_getdata_result = self.groupSyncRead.isAvailable(self.ids[index], ADDR_PRESENT_POSITION, LEN_PRESENT_POSITION)
+            self.check_groupSync(self.ids[index], dxl_getdata_result, mode='r')
+            positions.append(self.groupSyncRead.getData(self.ids[index], ADDR_PRESENT_POSITION, LEN_PRESENT_POSITION))
         return positions
     
     def close(self):

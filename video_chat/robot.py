@@ -154,6 +154,6 @@ if __name__ == '__main__':
         robot.conn_pose.close()
         robot.server.close()
         robot.server_pose.close()
-        print("##################################\n", \
+        print("#################################\n", \
               "### Closing Robot normally ...###\n", \
-              "##################################")
+              "#################################")
