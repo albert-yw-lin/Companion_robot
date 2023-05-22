@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import cv2, socket, threading, time
+import cv2, socket, threading, time, struct
 import mediapipe as mp
 import numpy as np
 from utils import *
@@ -81,7 +81,7 @@ class Robot:
             else: self.thread_send_image.join()
             self.thread_send_image =threading.Thread(target=send_image, args=(self.conn, image))
             self.thread_send_image.start()   
-            
+
         except TypeError:
             pass
 

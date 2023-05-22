@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import cv2, socket, threading, time, math
+import cv2, socket, threading, time, math, struct
 import mediapipe as mp
 import numpy as np
 from utils import *
