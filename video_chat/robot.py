@@ -24,7 +24,7 @@ class Robot:
         self.face_center_pub = rospy.Publisher('face_center', Float64MultiArray, queue_size=10)
         self.pose_pub = rospy.Publisher('pose', UInt8MultiArray, queue_size=10)
         rospy.init_node('camera', anonymous=True)
-        self.rate = rospy.Rate(24)
+        # self.rate = rospy.Rate(10)
 
         self.is_first_send = True
         self.is_first_detection = True
@@ -70,7 +70,7 @@ class Robot:
         self.face_center.data = [self.face_center_x, self.face_center_y]
         # rospy.loginfo(self.face_center)
         self.face_center_pub.publish(self.face_center)
-        self.rate.sleep()
+        # self.rate.sleep()
 
         ### Flip the image horizontally for a selfie-view display.
         image = cv2.flip(image, 1)
@@ -90,7 +90,7 @@ class Robot:
             self.pose.data = struct.unpack('!4B', data) #!4B: four Uint8
             # rospy.loginfo(self.pose)
             self.pose_pub.publish(self.pose)
-            self.rate.sleep()
+            # self.rate.sleep()
 
     def detection(self):
         with self.mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.5) as face:
