@@ -61,9 +61,9 @@ if __name__ == '__main__':
     finally:
         rospy.signal_shutdown('Shutting down head_arm')
         head_arm.motor.close()
-        print("####################################\n", \
-              "### Closing Head_arm normally ...###\n", \
-              "####################################")
+        print("\n####################################\n", \
+                "### Closing Head_arm normally ...###\n", \
+                "####################################")
 
 
 
