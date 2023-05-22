@@ -215,10 +215,10 @@ int A1_16_ReadPacket(unsigned char _data_length){
   while (packet_pointer < packet_length){
 	timeout_counter = 0;
 	/*while(Serial1.available() <= 0){*/
-  // while(uart_available() <= 0){
-	// 	timeout_counter++;
-	// 	if(timeout_counter > 1000L) return -1;
-	// }
+  while(uart_available() <= 0){
+		timeout_counter++;
+		if(timeout_counter > 1000L) return -1;
+	}
 	/*packet_received[packet_pointer] = Serial1.read();*/
   packet_received[packet_pointer] = uart_read1();
 	if((packet_received[packet_pointer] == 0xff) && (header_check == 0)){
