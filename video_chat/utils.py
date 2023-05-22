@@ -38,11 +38,11 @@ def send_image(socket, image):
 def recv_image(socket, is_shutdown):
     try:
         buffer = b''
-        while True:
+        while not is_shutdown:
             data = socket.recv(RECV_BYTE_PER_TIME)
 
             ### close server and client simultaneously
-            if (not data) or is_shutdown : break
+            if (not data): break
             
             buffer += data
             encode_image_length = int.from_bytes(buffer[:4], byteorder='big')

@@ -84,10 +84,10 @@ class Robot:
         self.thread_send_image.start()   
 
     def recv_pose(self, socket):
-        while True:
+        while not self.is_system_shutdown:
             data = socket.recv(4) # 4 bytes means four Uint8
             ### close server and client simultaneously
-            if not data or self.is_system_shutdown : break
+            if (not data): break
 
             self.pose.data = struct.unpack('!4B', data) #!4B: four Uint8
             rospy.loginfo(self.pose)
