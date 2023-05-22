@@ -6,9 +6,8 @@ import time
 
 class Dynamixel:
 
-    def __init__(self, ids) -> None:
+    def __init__(self) -> None:
         ### initialization
-        self.ids = ids
         self.portHandler = PortHandler(DEVICENAME)
         self.packetHandler = PacketHandler(PROTOCOL_VERSION)
         self.groupSyncWrite = GroupSyncWrite(self.portHandler, self.packetHandler, ADDR_GOAL_POSITION, LEN_GOAL_POSITION)
@@ -28,7 +27,7 @@ class Dynamixel:
             print("Failed to change the baudrate, automatically terminate...")
             quit()
 
-        for id in self.ids:
+        for id in DXL_ID:
             # Add parameter storage for Dynamixel#id present position value
             dxl_addparam_result = self.groupSyncRead.addParam(id)
             self.check_groupSync(id, dxl_addparam_result, mode='r')
@@ -50,7 +49,7 @@ class Dynamixel:
         self.sync_write_pos(POS_INIT)
         time.sleep(2) # enough time to get to position
 
-        for id in self.ids:
+        for id in DXL_ID:
             ### torque disable to change settings in EEPROM section
             self.set_torque(mode='d')
 
@@ -88,20 +87,20 @@ class Dynamixel:
                 quit()
 
     def set_torque(self, mode='d'):
-        for id in self.ids:
+        for id in DXL_ID:
             if(mode=='e'):dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_ENABLE)
             elif(mode=='d'):dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
 
     def sync_write_pos(self, goal_positions):
         ### add parameter
-        for index in range(len(self.ids)):
-            param_goal_position = [DXL_LOBYTE(DXL_LOWORD(goal_positions[index])), 
-                                   DXL_HIBYTE(DXL_LOWORD(goal_positions[index])), 
-                                   DXL_LOBYTE(DXL_HIWORD(goal_positions[index])), 
-                                   DXL_HIBYTE(DXL_HIWORD(goal_positions[index]))] # DO NOT cnage the order of these four
-            dxl_addparam_result = self.groupSyncWrite.addParam(self.ids[index], param_goal_position)
-            self.check_groupSync(self.ids[index], dxl_addparam_result, mode='w')
+        for id in DXL_ID:
+            param_goal_position = [DXL_LOBYTE(DXL_LOWORD(goal_positions[id])), 
+                                   DXL_HIBYTE(DXL_LOWORD(goal_positions[id])), 
+                                   DXL_LOBYTE(DXL_HIWORD(goal_positions[id])), 
+                                   DXL_HIBYTE(DXL_HIWORD(goal_positions[id]))] # DO NOT cnage the order of these four
+            dxl_addparam_result = self.groupSyncWrite.addParam(id, param_goal_position)
+            self.check_groupSync(id, dxl_addparam_result, mode='w')
         
         ### start moving to the goal position
         dxl_comm_result = self.groupSyncWrite.txPacket()
@@ -114,15 +113,15 @@ class Dynamixel:
         positions = [] # list of present positions
         dxl_comm_result = self.groupSyncRead.txRxPacket()
         self.check_txrx(dxl_comm_result)
-        for index in range(len(self.ids)):
-            dxl_getdata_result = self.groupSyncRead.isAvailable(self.ids[index], ADDR_PRESENT_POSITION, LEN_PRESENT_POSITION)
-            self.check_groupSync(self.ids[index], dxl_getdata_result, mode='r')
-            positions.append(self.groupSyncRead.getData(self.ids[index], ADDR_PRESENT_POSITION, LEN_PRESENT_POSITION))
+        for id in DXL_ID:
+            dxl_getdata_result = self.groupSyncRead.isAvailable(id, ADDR_PRESENT_POSITION, LEN_PRESENT_POSITION)
+            self.check_groupSync(id, dxl_getdata_result, mode='r')
+            positions.append(self.groupSyncRead.getData(id, ADDR_PRESENT_POSITION, LEN_PRESENT_POSITION))
         return positions
     
     def close(self):
         self.groupSyncRead.clearParam()
-        for id in self.ids:
+        for id in DXL_ID:
             dxl_comm_result, dxl_error = self.packetHandler.write1ByteTxRx(self.portHandler, id, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_TORQUE_ENABLE)
         self.portHandler.closePort()
