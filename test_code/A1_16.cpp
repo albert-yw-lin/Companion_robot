@@ -53,7 +53,7 @@ void uart_close(){
 
 /* Jetson Nano UART initialzation function */
 void A1_16_Ini(){
-  uart = open("/dev/ttyTHS2", O_RDWR | O_NOCTTY | O_NDELAY);
+  uart = open("/dev/ttyTHS1", O_RDWR | O_NOCTTY | O_NDELAY);
   if(uart < 0){
       std::cout << "Error opening UART\n";
       return;
