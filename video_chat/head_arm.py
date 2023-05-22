@@ -52,6 +52,9 @@ if __name__ == '__main__':
     # except rospy.ROSInterruptException:
     #     pass
 
+    except rospy.ROSInterruptException:
+        pass
+    
     except Exception as error_code:
         print(error_code)   
 

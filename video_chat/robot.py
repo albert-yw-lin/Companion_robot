@@ -134,8 +134,8 @@ if __name__ == '__main__':
     # except KeyboardInterrupt:
     #     pass
     
-    # except rospy.ROSInterruptException:
-    #     pass
+    except rospy.ROSInterruptException:
+        pass
 
     except Exception as error_code:
         print(error_code)
