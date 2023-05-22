@@ -22,7 +22,7 @@ TORQUE_DISABLE              = 0                 # Value for disabling the torque
 
 ### can modify if necessary (CAREFULLY)
 DEVICENAME                  = '/dev/ttyUSB0'
-POS_INIT = [2048, 1400, 2048, 2048, 2048, 2048]
+POS_INIT = [2048, 1400, 0, 2048, 2048, 2048]
 POS_LIMIT = [[1770,2230],
              [1250,1700],
              [0,2048],
