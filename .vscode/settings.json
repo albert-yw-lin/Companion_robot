@@ -49,6 +49,12 @@
         "typeinfo": "cpp",
         "chrono": "cpp",
         "ratio": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "strstream": "cpp",
+        "bitset": "cpp",
+        "complex": "cpp",
+        "set": "cpp",
+        "iomanip": "cpp",
+        "cfenv": "cpp"
     }
 }

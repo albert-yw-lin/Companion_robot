@@ -1,0 +1,2 @@
+video_chat
+-DCATKIN_DEVEL_PREFIX=/home/yuwei/Desktop/companion_robot/robot_ws/devel -DCMAKE_INSTALL_PREFIX=/home/yuwei/Desktop/companion_robot/robot_ws/install -G Unix Makefiles
