@@ -144,7 +144,9 @@ if __name__ == '__main__':
 
     finally:
         robot.is_system_shutdown = True
-        print("Wait for the system shutown ...")
+        print("######################################\n \
+               ### Wait for the system shutown ...###\n \
+               ######################################")
         time.sleep(3)
 
         rospy.signal_shutdown('Shutting down camera')
@@ -154,4 +156,6 @@ if __name__ == '__main__':
         robot.conn_pose.close()
         robot.server.close()
         robot.server_pose.close()
-        print("Closing the program ...")
+        print("#################################\n \
+               ### Closing Robot normally ...###\n \
+               #################################")
