@@ -13,9 +13,8 @@ class Head_arm:
         self.motor_pos[ID_HEAD_X] = FACE_CENTER_X
         self.motor_pos[ID_HEAD_Y] = FACE_CENTER_Y
 
-        rospy.init_node('head', anonymous=True)
+        rospy.init_node('head_arm', anonymous=True)
         rospy.Subscriber('face_center', Float64MultiArray, self.face_center_callback)
-        rospy.init_node('arm', anonymous=True)
         rospy.Subscriber('pose', UInt8MultiArray, self.pose_callback)
 
     def face_center_callback(self, face_center):
