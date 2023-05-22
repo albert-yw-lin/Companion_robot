@@ -50,8 +50,8 @@ ID_ARM_R = 3
 FACE_CENTER_X = 0.5
 FACE_CENTER_Y = 0.6
 P_GAIN_X = 0.25
-P_GAIN_Y_UP = 0.6
-P_GAIN_Y_DOWN = 0.6
+P_GAIN_Y_UP = 0.3
+P_GAIN_Y_DOWN = 0.3
 
 
 ### turn base
