@@ -176,7 +176,8 @@ void A1_16_TorqueOff(unsigned char _pID){
 
 int A1_16_ReadData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, unsigned char _data_length){
   unsigned char dummy; // dummy variable 
-  while(read(uart, &dummy, 1) != -1); // endless loop until no data received
+  //while(read(uart, &dummy, 1) != -1); // endless loop until no data received
+  while(read(uart, &dummy, 1) > 0);
   checksum_1 = (9^_pID^_CMD^_addr_start^_data_length)&0xfe;
   checksum_2 = (~checksum_1)&0xfe;
   /*
