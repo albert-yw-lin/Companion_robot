@@ -1,0 +1,8 @@
+prefix=/home/yuwei/Desktop/companion_robot/jetson_ws/install
+
+Name: video_chat
+Description: Description of video_chat
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
