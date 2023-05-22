@@ -207,7 +207,3 @@ include_directories(
 
 add_executable(base src/base.cpp src/A1_16.cpp)
 target_link_libraries(base ${catkin_LIBRARIES})
-
-catkin_install_python(PROGRAMS scripts/config.py scripts/dynamixel_config.py scripts/dynamixel.py scripts/head_arm.py scripts/robot.py scripts/utils.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)

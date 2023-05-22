@@ -9,8 +9,8 @@
 #include "std_msgs/UInt8.h"
 
 int pos = 512; //0-1023
-int step = 70;
-unsigned char wait_time = 180;
+int step = 40;
+unsigned char wait_time = 100;
 unsigned char id = 1;
 
 
