@@ -218,9 +218,9 @@ if __name__ == '__main__':
     
     finally:
         laptop.is_system_shutdown = True
-        print("######################################\n \
-               ### Wait for the system shutown ...###\n \
-               ######################################")
+        print("######################################\n", \
+              "### Wait for the system shutown ...###\n", \
+              "######################################")
         time.sleep(3)
 
 
@@ -229,6 +229,6 @@ if __name__ == '__main__':
         laptop.client.close()
         laptop.client_pose.close()
         cv2.destroyAllWindows()
-        print("##################################\n \
-               ### Closing Laptop normally ...###\n \
-               ##################################")
+        print("##################################\n", \
+              "### Closing Laptop normally ...###\n", \
+              "##################################")
