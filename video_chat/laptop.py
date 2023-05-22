@@ -24,13 +24,6 @@ class Laptop:
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
         self.cap.set(cv2.CAP_PROP_FPS, FRAME_RATE) 
 
-        # socket setup
-        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.connect(ADDR)
-        time.sleep(3)
-        self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_pose.connect(ADDR_POSE)
-
         # face detection variable
         self.xmin_prev = 0
         self.ymin_prev = 0
@@ -41,6 +34,13 @@ class Laptop:
         self.is_first_detection = True
 
         self.is_system_shutdown = False
+
+        # socket setup
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client.connect(ADDR)
+        time.sleep(3)
+        self.client_pose.connect(ADDR_POSE)
 
     def send_face_crop(self, image, face):
         ### To improve performance, optionally mark the image as not writeable to

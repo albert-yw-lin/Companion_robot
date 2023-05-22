@@ -18,22 +18,6 @@ class Robot:
         ### webcam setup
         self.cap = cv2.VideoCapture(gstreamer_pipeline(), cv2.CAP_GSTREAMER)
 
-        ### socket setup
-        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server.bind(ADDR)
-        self.server.listen(1)
-        print("Waiting for client to connect ...")
-        self.conn, self.addr = self.server.accept()
-        print("Connected to client "+str(self.addr))
-
-        ### socket for pose calculation setup
-        self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_pose.bind(ADDR_POSE)
-        self.server_pose.listen(1)
-        print("Waiting for client_pose to connect ...")
-        self.conn_pose, self.addr_pose = self.server_pose.accept()
-        print("Connected to client_pose "+str(self.addr_pose))
-
         ### setup ROS message and node
         self.face_center = Float64MultiArray()
         self.pose = UInt8MultiArray()
@@ -49,6 +33,20 @@ class Robot:
         self.face_center_y = 0
 
         self.is_system_shutdown = False
+
+        ### socket setup
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.bind(ADDR)
+        self.server_pose.bind(ADDR_POSE)
+        self.server.listen(1)
+        self.server_pose.listen(1)
+        print("Waiting for clients to connect ...")
+
+        self.conn, self.addr = self.server.accept()
+        print("Connected to client "+str(self.addr))
+        self.conn_pose, self.addr_pose = self.server_pose.accept()
+        print("Connected to client_pose "+str(self.addr_pose))
 
     def send_face_center(self, image, face):
         ### To improve performance, optionally mark the image as not writeable to
