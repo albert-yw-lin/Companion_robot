@@ -8,30 +8,37 @@
 #include "ros/ros.h"
 #include "std_msgs/UInt8.h"
 
-int main(){
-    unsigned char id = 1;
-    unsigned char time = 10;
-    unsigned int pos = 400;
-    unsigned int now_pos;
-    unsigned char reset_time = 255;
-    /*
-    A1_16_Ini();
-    SetPositionI_JOG(id,reset_time,pos);
-    std::this_thread::sleep_for(std::chrono::milliseconds(2550));
-    for (pos=400; pos<=600; pos+=10){
-        // std::cout << ReadPosition(id);
-        SetPositionI_JOG(id,time,pos);
-        std::this_thread::sleep_for(std::chrono::milliseconds(time*10));
-        // now_pos = ReadPosition(id);
-        // std::cout <<"now position:" << now_pos << std::endl;
+int pos = 512; //0-1023
+int step = 100;
+unsigned char wait_time = 254;
+unsigned char id = 1;
+
+
+void base_callback(const std_msgs::UInt8::ConstPtr& cmd){
+    if (cmd.data == 0){
+        //turn left
+        pos -= step;
+        SetPositionI_JOG(id,wait_time,pos);
+        std::this_thread::sleep_for(std::chrono::milliseconds(wait_time*10));
     }
-    // SetPositionI_JOG(id,time,pos);
-    */
-   A1_16_Ini();
-   while(true){
-        now_pos = ReadPosition(id);
-        std::cout <<"now position:" << now_pos << std::endl;
-   }
+    else if (cmd.data == 1){
+        //turn right
+        pos += step;
+        SetPositionI_JOG(id,wait_time,pos);
+        std::this_thread::sleep_for(std::chrono::milliseconds(wait_time*10));
+    }
+}
+
+int main(int argc, char **argv){
+
+    A1_16_Ini();
+    SetPositionI_JOG(id,wait_time,pos);
+
+    ros::init(argc, argv, "base");
+    ros::NodeHandle n;
+    ros::Subscriber sub = n.subscribe("turn_base", 1, base_callback);
+    ros::spin();
+    
     uart_close();
     return 0;
 }

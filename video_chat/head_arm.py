@@ -14,7 +14,7 @@ class Head_arm:
         self.motor_pos[ID_HEAD_Y] = FACE_CENTER_Y
 
         self.turn_base = UInt8()
-        self.turn_base_pub = rospy.Publisher('turn_base', UInt8, queue_size=10)
+        self.turn_base_pub = rospy.Publisher('turn_base', UInt8, queue_size=1)
         rospy.init_node('head_arm', anonymous=True)
         rospy.Subscriber('face_center', Float64MultiArray, self.face_center_callback)
         rospy.Subscriber('pose', UInt8MultiArray, self.pose_callback)
