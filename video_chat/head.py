@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from dynamixel.dynamixel import Dynamixel
+from dynamixel import Dynamixel
 from config import *
 
 import rospy
@@ -40,6 +40,7 @@ if __name__ == '__main__':
         print(error_code)   
 
     finally:
+        rospy.signal_shutdown('Shutting down head')
         head.motor.close()
 
 

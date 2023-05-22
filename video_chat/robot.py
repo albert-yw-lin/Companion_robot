@@ -148,6 +148,7 @@ if __name__ == '__main__':
         print("Wait for the system shutown ...")
         time.sleep(3)
 
+        rospy.signal_shutdown('Shutting down camera')
         robot.cap.release()
         cv2.destroyAllWindows()
         robot.conn.close()
