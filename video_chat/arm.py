@@ -22,7 +22,7 @@ class Arm:
         self.motor.sync_write_pos([shoulder_L, arm_L, shoulder_R, arm_R])
 
     def mapping(self, value, old_min, old_max, new_min, new_max):
-        return (value - old_min) * (new_max - new_min) / (old_max - old_min) + new_min
+        return int((value - old_min) * (new_max - new_min) / (old_max - old_min) + new_min)
 
 if __name__ == '__main__':
     try:
