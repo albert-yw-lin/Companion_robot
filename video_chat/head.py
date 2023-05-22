@@ -43,7 +43,7 @@ if __name__ == '__main__':
         rospy.signal_shutdown('Shutting down head')
         head.motor.close()
         print("##################################\n", \
-              "### Closing Laptop normally ...###\n", \
+              "### Closing Head normally ...###\n", \
               "##################################")
 
 

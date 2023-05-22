@@ -95,13 +95,13 @@ class Dynamixel:
 
     def sync_write_pos(self, goal_positions):
         ### add parameter
-        for id in self.ids:
-            param_goal_position = [DXL_LOBYTE(DXL_LOWORD(goal_positions[id])), 
-                                   DXL_HIBYTE(DXL_LOWORD(goal_positions[id])), 
-                                   DXL_LOBYTE(DXL_HIWORD(goal_positions[id])), 
-                                   DXL_HIBYTE(DXL_HIWORD(goal_positions[id]))] # DO NOT cnage the order of these four
-            dxl_addparam_result = self.groupSyncWrite.addParam(id, param_goal_position)
-            self.check_groupSync(id, dxl_addparam_result, mode='w')
+        for index in range(len(self.ids)):
+            param_goal_position = [DXL_LOBYTE(DXL_LOWORD(goal_positions[index])), 
+                                   DXL_HIBYTE(DXL_LOWORD(goal_positions[index])), 
+                                   DXL_LOBYTE(DXL_HIWORD(goal_positions[index])), 
+                                   DXL_HIBYTE(DXL_HIWORD(goal_positions[index]))] # DO NOT cnage the order of these four
+            dxl_addparam_result = self.groupSyncWrite.addParam(self.ids[index], param_goal_position)
+            self.check_groupSync(self.ids[index], dxl_addparam_result, mode='w')
         
         ### start moving to the goal position
         dxl_comm_result = self.groupSyncWrite.txPacket()
