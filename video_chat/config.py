@@ -18,7 +18,7 @@ FOREHEAD = 0.5 # porprotion with respect to bounding box
 EXPAND = 0.15 # porprotion with respect to bounding box
 VIDEO_HEIGHT = 480
 VIDEO_WIDTH = 640
-FRAME_RATE = 30
+FRAME_RATE = 10
 
 ### webcam
 CAMERA_ID = -1
@@ -49,9 +49,12 @@ ID_ARM_R = 3
 ### motor face tracking
 FACE_CENTER_X = 0.5
 FACE_CENTER_Y = 0.6
-P_GAIN_X = 0.25
-P_GAIN_Y_UP = 0.3
-P_GAIN_Y_DOWN = 0.3
+# P_GAIN_X = 0.25
+# P_GAIN_Y_UP = 0.3
+# P_GAIN_Y_DOWN = 0.3
+P_GAIN_X = 0.7
+P_GAIN_Y_UP = 0.8
+P_GAIN_Y_DOWN = 0.8
 
 
 ### turn base
