@@ -20,11 +20,12 @@ class Robot:
 
         ### setup ROS message and node
         self.face_center = Float64MultiArray()
-        # self.pose = UInt8MultiArray()
-        self.face_center_pub = rospy.Publisher('face_center', Float64MultiArray, queue_size=10)
-        # self.pose_pub = rospy.Publisher('pose', UInt8MultiArray, queue_size=10)
+        self.pose = UInt8MultiArray()
+        self.face_center_pub = rospy.Publisher('face_center', Float64MultiArray, queue_size=3)
+        self.pose_pub = rospy.Publisher('pose', UInt8MultiArray, queue_size=3)
         rospy.init_node('camera', anonymous=True)
-        # self.rate = rospy.Rate(10)
+        self.face_center_rate = rospy.Rate(3)
+        self.pose_rate = rospy.Rate(3)
 
         self.is_first_send = True
         self.is_first_detection = True
@@ -36,17 +37,17 @@ class Robot:
 
         ### socket setup
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(ADDR)
-        # self.server_pose.bind(ADDR_POSE)
+        self.server_pose.bind(ADDR_POSE)
         self.server.listen(1)
-        # self.server_pose.listen(1)
+        self.server_pose.listen(1)
         print("Waiting for clients to connect ...")
 
         self.conn, self.addr = self.server.accept()
         print("Connected to client "+str(self.addr))
-        # self.conn_pose, self.addr_pose = self.server_pose.accept()
-        # print("Connected to client_pose "+str(self.addr_pose))
+        self.conn_pose, self.addr_pose = self.server_pose.accept()
+        print("Connected to client_pose "+str(self.addr_pose))
 
     def send_face_center(self, image, face):
         try:
@@ -71,7 +72,7 @@ class Robot:
             self.face_center.data = [self.face_center_x, self.face_center_y]
             # rospy.loginfo(self.face_center)
             self.face_center_pub.publish(self.face_center)
-            # self.rate.sleep()
+            self.face_center_rate.sleep()
 
             ### Flip the image horizontally for a selfie-view display.
             image = cv2.flip(image, 1)
@@ -94,7 +95,7 @@ class Robot:
             self.pose.data = struct.unpack('!4B', data) #!4B: four Uint8
             # rospy.loginfo(self.pose)
             self.pose_pub.publish(self.pose)
-            # self.rate.sleep()
+            self.pose_rate.sleep()
 
     def detection(self):
         with self.mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.5) as face:
@@ -121,8 +122,8 @@ if __name__ == '__main__':
         ### setup
         robot = Robot()
 
-        # thread_pose = threading.Thread(target=robot.recv_pose, args=(robot.conn_pose,))
-        # thread_pose.start()
+        thread_pose = threading.Thread(target=robot.recv_pose, args=(robot.conn_pose,))
+        thread_pose.start()
 
         ### set another thread to recceive streaming
         thread_recv_image = threading.Thread(target=recv_image, args=(robot.conn, robot.is_system_shutdown))
@@ -133,7 +134,7 @@ if __name__ == '__main__':
 
         ### wait till the receive thread to end
         thread_recv_image.join()
-        # thread_pose.join()
+        thread_pose.join()
 
     except KeyboardInterrupt:
         pass
@@ -155,9 +156,9 @@ if __name__ == '__main__':
         robot.cap.release()
         cv2.destroyAllWindows()
         robot.conn.close()
-        # robot.conn_pose.close()
+        robot.conn_pose.close()
         robot.server.close()
-        # robot.server_pose.close()
+        robot.server_pose.close()
         print("\n ##################################\n", \
                  "### Closing Robot normally ... ###\n", \
                  "##################################")

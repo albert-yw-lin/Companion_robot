@@ -13,11 +13,12 @@ class Head_arm:
         self.motor_pos[ID_HEAD_X] = FACE_CENTER_X
         self.motor_pos[ID_HEAD_Y] = FACE_CENTER_Y
 
-        # self.turn_base = UInt8()
-        # self.turn_base_pub = rospy.Publisher('turn_base', UInt8, queue_size=1)
+        self.turn_base = UInt8()
+        self.turn_base_pub = rospy.Publisher('turn_base', UInt8, queue_size=1)
+        self.turn_base_rate = rospy.Rate(3)
         rospy.init_node('head_arm', anonymous=True)
         rospy.Subscriber('face_center', Float64MultiArray, self.face_center_callback)
-        # rospy.Subscriber('pose', UInt8MultiArray, self.pose_callback)
+        rospy.Subscriber('pose', UInt8MultiArray, self.pose_callback)
 
 
 
@@ -31,21 +32,19 @@ class Head_arm:
         else:add_motor_head_y = int(error_y*(48.8/360)*4095*P_GAIN_Y_UP)
 
         motor_present_pos = self.motor.sync_read_pos()
+
         self.motor_pos[ID_HEAD_X] = motor_present_pos[ID_HEAD_X] + add_motor_head_x
         self.motor_pos[ID_HEAD_Y] = motor_present_pos[ID_HEAD_Y] + add_motor_head_y
         self.motor.sync_write_pos(self.motor_pos)
 
         ### check if base should move
-        if self.motor_pos[ID_HEAD_X] >= POS_LIMIT[ID_HEAD_X][1]- TURN_THRESHOLD:
-            self.turn_base.data = TURN_RIGHT
-            self.turn_base_pub.publish(self.turn_base)
+        if motor_present_pos[ID_HEAD_X] >= POS_LIMIT[ID_HEAD_X][1]- TURN_THRESHOLD : self.turn_base.data = TURN_RIGHT
+        elif motor_present_pos[ID_HEAD_X] <= POS_LIMIT[ID_HEAD_X][0] + TURN_THRESHOLD : self.turn_base.data = TURN_LEFT
+        else:self.turn_base.data = TURN_STOP
+        self.turn_base_pub.publish(self.turn_base)
+        self.turn_base_rate.sleep()
 
-        elif self.motor_pos[ID_HEAD_X] <= POS_LIMIT[ID_HEAD_X][0] + TURN_THRESHOLD:
-            self.turn_base.data = TURN_LEFT
-            self.turn_base_pub.publish(self.turn_base)
-        else:
-            self.turn_base.data = TURN_STOP
-            self.turn_base_pub.publish(self.turn_base)
+
 
     def pose_callback(self, pose):
         # rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
