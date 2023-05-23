@@ -42,10 +42,8 @@ def recv_image(socket, is_shutdown):
 
 def gstreamer_pipeline(
     sensor_id=0,
-    # capture_width=1640,
-    # capture_height=1232,
-    capture_width=640,
-    capture_height=480,
+    capture_width=1640,
+    capture_height=1232,
     display_width=640,
     display_height=480,
     framerate=10,
