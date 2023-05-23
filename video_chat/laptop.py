@@ -35,6 +35,10 @@ class Laptop:
 
         self.is_system_shutdown = False
 
+
+        ### record the video for presentation
+        self.video_recorder = cv2.VideoWriter('../final_demo/video_face_pose_fps10_rosrate10.mp4', cv2.VideoWriter_fourcc(*'MP4V'), FRAME_RATE, (VIDEO_WIDTH,  VIDEO_HEIGHT))
+
         # socket setup
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -104,6 +108,9 @@ class Laptop:
         image = cv2.copyMakeBorder(image, 0,0,pad_L,pad_R, cv2.BORDER_CONSTANT, value=0)
         ### Flip the image horizontally for a selfie-view display.
         image = cv2.flip(image, 1)
+
+        ### record video
+        self.video_recorder.write(image)
 
         ### send socket
         if(self.is_first_send_image):
