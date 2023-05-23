@@ -52,9 +52,9 @@ FACE_CENTER_Y = 0.6
 # P_GAIN_X = 0.25
 # P_GAIN_Y_UP = 0.3
 # P_GAIN_Y_DOWN = 0.3
-P_GAIN_X = 0.7
-P_GAIN_Y_UP = 0.8
-P_GAIN_Y_DOWN = 0.8
+P_GAIN_X = 0.4
+P_GAIN_Y_UP = 0.4
+P_GAIN_Y_DOWN = 0.4
 
 
 ### turn base
