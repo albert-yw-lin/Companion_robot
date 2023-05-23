@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from dynamixel import Dynamixel
 from config import *
-from dynamixel_config import POS_LIMIT
+from dynamixel_config import POS_LIMIT, POS_INIT
 
 import rospy
 from std_msgs.msg import Float64MultiArray, UInt8MultiArray, UInt8
@@ -9,9 +9,7 @@ from std_msgs.msg import Float64MultiArray, UInt8MultiArray, UInt8
 class Head_arm:
     def __init__(self) -> None:
         self.motor = Dynamixel()
-        self.motor_pos = [0,0,0,0,0,0]
-        self.motor_pos[ID_HEAD_X] = FACE_CENTER_X
-        self.motor_pos[ID_HEAD_Y] = FACE_CENTER_Y
+        self.motor_pos = POS_INIT
 
         self.turn_base = UInt8()
         self.turn_base_pub = rospy.Publisher('turn_base', UInt8, queue_size=1)
