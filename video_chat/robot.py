@@ -24,8 +24,8 @@ class Robot:
         self.face_center_pub = rospy.Publisher('face_center', Float64MultiArray, queue_size=3)
         self.pose_pub = rospy.Publisher('pose', UInt8MultiArray, queue_size=3)
         rospy.init_node('camera', anonymous=True)
-        self.face_center_rate = rospy.Rate(3)
-        self.pose_rate = rospy.Rate(3)
+        self.face_center_rate = rospy.Rate(10)
+        self.pose_rate = rospy.Rate(10)
 
         self.is_first_send = True
         self.is_first_detection = True
