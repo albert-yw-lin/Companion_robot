@@ -37,14 +37,17 @@ class Laptop:
 
 
         ### record the video for presentation
-        self.video_recorder = cv2.VideoWriter('../final_demo/video_face_pose_fps10_rosrate10.mp4', cv2.VideoWriter_fourcc(*'MP4V'), FRAME_RATE, (VIDEO_WIDTH,  VIDEO_HEIGHT))
+        self.video_recorder = cv2.VideoWriter('../final_demo/video_face_pose_fps10_rosrate10.mp4', cv2.VideoWriter_fourcc(*'mp4v'), FRAME_RATE, (VIDEO_WIDTH,  VIDEO_HEIGHT))
+        print("create video writer successfully")
 
         # socket setup
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect(ADDR)
+        print("connect to server successfully")
         time.sleep(3)
         self.client_pose.connect(ADDR_POSE)
+        print("connect to server_pose successfully")
 
     def send_face_crop(self, image, face):
         ### To improve performance, optionally mark the image as not writeable to
