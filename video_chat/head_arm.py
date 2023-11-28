@@ -48,7 +48,7 @@ class Head_arm:
         # rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
         shoulder_L, arm_L, shoulder_R, arm_R = pose.data
         self.motor_pos[ID_SHOULDER_L] = self.mapping(shoulder_L, SHOULDER_MIN, SHOULDER_MAX, POS_LIMIT[ID_SHOULDER_L][0], POS_LIMIT[ID_SHOULDER_L][1])
-        self.motor_pos[ID_ARM_L] = self.mapping(arm_L, ARM_MIN, ARM_MAX, POS_LIMIT[ID_ARM_L][0], POS_LIMIT[ID_ARM_L][1])  ### min:0, max:1, different with others!
+        self.motor_pos[ID_ARM_L] = self.mapping(arm_L, ARM_MIN, ARM_MAX, POS_LIMIT[ID_ARM_L][0], POS_LIMIT[ID_ARM_L][1])  # min:0, max:1, different with others!
         self.motor_pos[ID_SHOULDER_R] = self.mapping(shoulder_R, SHOULDER_MIN, SHOULDER_MAX, POS_LIMIT[ID_SHOULDER_R][1], POS_LIMIT[ID_SHOULDER_R][0])
         self.motor_pos[ID_ARM_R] = self.mapping(arm_R, ARM_MIN, ARM_MAX, POS_LIMIT[ID_ARM_R][1], POS_LIMIT[ID_ARM_R][0])
 

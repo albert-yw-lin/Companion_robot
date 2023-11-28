@@ -17,8 +17,8 @@ LEN_GOAL_POSITION           = 4         # Data Byte Length
 ADDR_PRESENT_POSITION       = 132
 LEN_PRESENT_POSITION        = 4         # Data Byte Length
 BAUDRATE                    = 57600
-TORQUE_ENABLE               = 1                 # Value for enabling the torque
-TORQUE_DISABLE              = 0                 # Value for disabling the torque
+TORQUE_ENABLE               = 1         # Value for enabling the torque
+TORQUE_DISABLE              = 0         # Value for disabling the torque
 
 ### can modify if necessary (CAREFULLY)
 DEVICENAME                  = '/dev/ttyUSB0'

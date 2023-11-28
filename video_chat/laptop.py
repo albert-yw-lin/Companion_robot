@@ -9,7 +9,7 @@ class Laptop:
 
     def __init__(self) -> None:
 
-        # mediapipe setup
+        ### mediapipe setup
         self.mp_face = mp.solutions.face_detection
         self.mp_pose = mp.solutions.pose
         self.shoulder_angle_L = 0
@@ -18,13 +18,13 @@ class Laptop:
         self.arm_angle_R = 0
         self.arm_state = (self.shoulder_angle_L, self.arm_angle_L, self.shoulder_angle_R, self.arm_angle_R)
 
-        # webcam setup
+        ### webcam setup
         self.cap = cv2.VideoCapture(CAMERA_ID)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
         self.cap.set(cv2.CAP_PROP_FPS, FRAME_RATE) 
 
-        # face detection variable
+        ### face detection variable
         self.xmin_prev = 0
         self.ymin_prev = 0
         self.width_prev = 0
@@ -40,7 +40,7 @@ class Laptop:
         # self.video_recorder = cv2.VideoWriter('../final_demo/video_face_pose_fps10_rosrate10_short.mp4', cv2.VideoWriter_fourcc(*'mp4v'), FRAME_RATE, (VIDEO_WIDTH,  VIDEO_HEIGHT))
         # print("create video writer successfully")
 
-        # socket setup
+        ### socket setup
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_pose = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect(ADDR)
@@ -68,7 +68,7 @@ class Laptop:
 
             box = detection.location_data.relative_bounding_box
 
-            ### add smooth filter to both box location and box area
+            ### add WMA filter to both box location and box area
             if 0 in (self.xmin_prev, self.ymin_prev, self.width_prev, self.height_prev):
                 self.xmin_prev = box.xmin
                 self.ymin_prev = box.ymin
@@ -100,7 +100,7 @@ class Laptop:
             if ymin < 0: ymin = 0
             image = image[int(ymin):int(ymax), int(xmin):int(xmax)]
             
-        ###post processing
+        ### post processing
         ### resize
         x_size = int(VIDEO_HEIGHT*(image.shape[1]/image.shape[0]))
         image = cv2.resize(image, (x_size,VIDEO_HEIGHT))

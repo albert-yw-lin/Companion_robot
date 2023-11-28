@@ -5,17 +5,16 @@ import cv2
 HEADER = 64
 PORT = 9999
 PORT_POSE = 5000
-# SERVER = "192.168.0.205" # in lab
-# SERVER = "192.168.0.11" # at home, ethernet
-SERVER = "192.168.0.13" # at home, wifi
-# SERVER = "127.0.0.1"
+# SERVER = "192.168.0.205"        # in lab
+# SERVER = "192.168.0.11"         # at home, ethernet
+SERVER = "192.168.0.13"         # at home, wifi
 ADDR = (SERVER, PORT)
 ADDR_POSE = (SERVER, PORT_POSE)
 
 ### face detection
-SMOOTH = 0.2 # 1 for no smooth
-FOREHEAD = 0.5 # porprotion with respect to bounding box
-EXPAND = 0.15 # porprotion with respect to bounding box
+SMOOTH = 0.2        # 1 for no smooth
+FOREHEAD = 0.5      # porprotion with respect to bounding box
+EXPAND = 0.15       # porprotion with respect to bounding box
 VIDEO_HEIGHT = 480
 VIDEO_WIDTH = 640
 FRAME_RATE = 10
@@ -24,7 +23,6 @@ FRAME_RATE = 10
 CAMERA_ID = -1
 
 ### socket speed
-# SEND_BYTE_PER_TIME = 32768 #2e14
 SEND_BYTE_PER_TIME = 4096
 RECV_BYTE_PER_TIME = 1024
 
@@ -52,10 +50,6 @@ FACE_CENTER_Y = 0.6
 P_GAIN_X = 0.25
 P_GAIN_Y_UP = 0.3
 P_GAIN_Y_DOWN = 0.3
-# P_GAIN_X = 0.5
-# P_GAIN_Y_UP = 0.5
-# P_GAIN_Y_DOWN = 0.5
-
 
 ### turn base
 TURN_LEFT = 0

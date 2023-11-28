@@ -13,14 +13,14 @@ class Dynamixel:
         self.groupSyncWrite = GroupSyncWrite(self.portHandler, self.packetHandler, ADDR_GOAL_POSITION, LEN_GOAL_POSITION)
         self.groupSyncRead = GroupSyncRead(self.portHandler, self.packetHandler, ADDR_PRESENT_POSITION, LEN_PRESENT_POSITION)
 
-        # Open port
+        ### Open port
         if self.portHandler.openPort():
             print("Succeeded to open the port")
         else:
             print("Failed to open the port, automatically terminate...")
             quit()
 
-        # Set port baudrate
+        ### Set port baudrate
         if self.portHandler.setBaudRate(BAUDRATE):
             print("Succeeded to change the baudrate")
         else:
@@ -28,11 +28,11 @@ class Dynamixel:
             quit()
 
         for id in DXL_ID:
-            # Add parameter storage for Dynamixel#id present position value
+            ### Add parameter storage for Dynamixel#id present position value
             dxl_addparam_result = self.groupSyncRead.addParam(id)
             self.check_groupSync(id, dxl_addparam_result, mode='r')
 
-            # Enable Dynamixel#id Torque
+            ### Enable Dynamixel#id Torque
             self.set_torque(mode='e')
 
             ### set profiles(acceleration, velocity) of each motor
@@ -63,7 +63,7 @@ class Dynamixel:
             dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, id, ADDR_MOVING_THRESHOLD, MOVING_THRESHOLD)
             self.check_txrx(dxl_comm_result, dxl_error, ADDR_MOVING_THRESHOLD)
 
-            # Enable Dynamixel#id Torque
+            ### Enable Dynamixel#id Torque
             self.set_torque(mode='e')
             
         self.sync_write_pos(POS_INIT)
@@ -106,11 +106,11 @@ class Dynamixel:
         dxl_comm_result = self.groupSyncWrite.txPacket()
         self.check_txrx(dxl_comm_result)
         
-        # Clear syncwrite parameter storage
+        ### Clear syncwrite parameter storage
         self.groupSyncWrite.clearParam()
 
     def sync_read_pos(self):
-        positions = [] # list of present positions
+        positions = []          # list of present positions
         dxl_comm_result = self.groupSyncRead.txRxPacket()
         self.check_txrx(dxl_comm_result)
         for id in DXL_ID:
