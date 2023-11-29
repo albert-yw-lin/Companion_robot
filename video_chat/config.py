@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import cv2
 
+### The general config file
+
 ### socket
 HEADER = 64
 PORT = 9999

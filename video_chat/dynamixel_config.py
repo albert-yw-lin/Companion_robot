@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+### The config file especially for dynamixel motors
+
 ### DO NOT MODIFY THIS SECTION
 MY_DXL = 'X_SERIES'
 PROTOCOL_VERSION            = 2.0

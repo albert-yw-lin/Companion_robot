@@ -8,6 +8,7 @@ from config import *
 import rospy
 from std_msgs.msg import Float64MultiArray, UInt8MultiArray
 
+### robot module (local user), including ROS camera node
 class Robot:
 
     def __init__(self) -> None:

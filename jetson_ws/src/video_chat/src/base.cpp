@@ -8,6 +8,8 @@
 #include "ros/ros.h"
 #include "std_msgs/UInt8.h"
 
+/* ROS base node based on A1-16 motor module*/
+
 int pos = 512; //0-1023
 int step = 30;
 unsigned char wait_time = 255;

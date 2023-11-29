@@ -6,6 +6,7 @@ from dynamixel_config import POS_LIMIT, POS_INIT
 import rospy
 from std_msgs.msg import Float64MultiArray, UInt8MultiArray, UInt8
 
+### ROS head_arm node to control dynamixel motors based on dynamixel motor module
 class Head_arm:
     def __init__(self) -> None:
         self.motor = Dynamixel()

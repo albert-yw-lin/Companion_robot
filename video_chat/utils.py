@@ -3,6 +3,9 @@ import cv2
 import numpy as np
 from config import *
 
+### general functions that are used in both latop and robot modules 
+### (except gstreamer_pipeline only for pi camera on the robot)
+
 def send_image(socket, image):
     try:
         encode_image = cv2.imencode('.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), JPEG_QUALITY])[1].tobytes()

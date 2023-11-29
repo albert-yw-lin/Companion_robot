@@ -4,6 +4,7 @@ from dynamixel_sdk import *                    # Uses Dynamixel SDK library
 from dynamixel_config import *
 import time
 
+### Dynamixel motor module for sync control
 class Dynamixel:
 
     def __init__(self) -> None:

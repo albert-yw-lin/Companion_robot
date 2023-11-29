@@ -5,6 +5,7 @@ import numpy as np
 from utils import *
 from config import *
 
+### Laptop module (remote users)
 class Laptop:
 
     def __init__(self) -> None:
@@ -50,8 +51,7 @@ class Laptop:
         print("connect to server_pose successfully")
 
     def send_face_crop(self, image, face):
-        ### To improve performance, optionally mark the image as not writeable to
-        ### pass by reference.
+        ### To improve performance, optionally mark the image as not writeable to pass by reference.
         image.flags.writeable = False
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = face.process(image)
@@ -120,8 +120,7 @@ class Laptop:
         self.thread_send_image.start()
     
     def send_pose(self, image, pose):
-        ### To improve performance, optionally mark the image as not writeable to
-        ### pass by reference.
+        ### To improve performance, optionally mark the image as not writeable to pass by reference.
         image.flags.writeable = False
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = pose.process(image)
