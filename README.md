@@ -8,9 +8,9 @@ Advisor: Prof. Han-Pang Huang
 
 Inspired by the social needs of people confined during the COVID-19 pandemic, this companion robot enhances physical interaction beyond verbal and visual communication by replicating the movements of remote users during video calls.
 
-![robot_half_transparent.png](Picture/robot_transparent.png)
+![robot_transparent.png](Picture/robot_transparent.png)
 
-![C2DCC03A-D4AA-4626-8011-A96CC5907D01.jpg](Picture/robot.jpg)
+![robot.jpg](Picture/robot.jpg)
 
 ## System Introduction
 
