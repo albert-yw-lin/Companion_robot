@@ -2,8 +2,6 @@
 
 Undergraduate Research in the Robotics Lab @National Taiwan University
 
-Contributor: Lin, Yu-Wei
-
 Advisor: Prof. Han-Pang Huang
 
 ## Abstract
